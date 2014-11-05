@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.baramejapps.tripstalker" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>TripsTalker</name>
+    <description>
+        Trips companion that ease managing a group of friends moving.
+    </description>
+    <author email="info@baramejapps.com" href="http://www.baramejapps.com">
+        Baramej Apps
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+</widget>
