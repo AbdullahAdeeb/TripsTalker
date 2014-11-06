@@ -57,14 +57,7 @@ function login() {
         {"body":cred},
         function(response){  //success handler
             window.localStorage.setItem("session",JSON.stringify(response));
-            console.log("session saved to local storage");
-            console.log(window.localStorage.getItem("session"));
-            $.mobile.pageContainer.pagecontainer('change', '#trips_page', {
-                transition: 'flip',
-                changeHash: false,
-                reverse: true,
-                showLoadMsg: true
-            });
+            startSession();
 
         },
         function(response){ //error handler
@@ -107,26 +100,61 @@ function popError(message){
     $('#errorpop').popup('open', {transition: 'pop'});
 }        
 
+///////////////////////// GET FRIENDS LIST FUCNTION
+function getFriendsList(id){
+	console.log(window);
+	window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, function (response) {
+		console.log ('we are getting friends!!');
+		console.log((response.record[0].friends));
+		var friends = (response.record[0].friends);
+		var friendsArray = friends.split(";");
+		console.log (friendsArray);
+		var numberOfFriends = friendsArray.length;
+
+		for( var i =  0 ; i < numberOfFriends ; ++i){
+			
+			// create a <li> for each one.
+			var listItem = document.createElement("li");
+
+			// add the item text
+			listItem.innerHTML = friendsArray[i];
+			console.log(listItem);
+			// add listItem to the listElement
+
+			$('#friends_list').append(listItem);//.listview('refresh');
+
+		}
+
+	} ,function (response){popError("broblem");}
+	);
+	
+}
+
+function startSession(){
+	console.log('session found in local storage, no need to log in');
+	$.mobile.pageContainer.pagecontainer('change', '#trips_page', {
+		transition: 'flip',
+		changeHash: false,
+		reverse: true,
+		showLoadMsg: true
+	});
+	// setTimeout(getFriendsList(8),40000);
+	setTimeout(function(){ 
+		getFriendsList(8);
+    }, 1000);  	
+}
+
 var app = {
     // Application Constructor
     initialize: function() {
-        
         $.mobile.allowCrossDomainPages = true;
         $.support.cors = true;
         this.bindEvents();
-        
-        
     },
     
     checkSession: function(){
         if(localStorage.getItem('session')!= undefined){
-            console.log('session found in local storage, no need to log in');
-            $.mobile.pageContainer.pagecontainer('change', '#trips_page', {
-                transition: 'flip',
-                changeHash: false,
-                reverse: true,
-                showLoadMsg: true
-            });
+			startSession();
             return true;
         }else{
             console.log('no session found in local storage must log in');
@@ -148,11 +176,8 @@ var app = {
     bindEvents: function() {
 
         $(document).on("mobileinit",this.onMobileinit);
-        $(document).on("pagecreate","#login_page",this.onPageCreate);
-        $(document ).on("pageload", function (e) {
-            console.log('page before change !!! ');
-//            app.checkSession();
-        });
+        $(document).on("pagecreate","#login_page", this.onPageCreate);
+        // $.mobile.pageContainer.pagecontainer("load", this.onPageCreate);
         document.addEventListener('deviceready', this.onDeviceReady, false);
         
         $(window).on( "navigate", function( event, data ) {
@@ -172,7 +197,7 @@ var app = {
         
     },
     
-    onPageCreate: function(){
+    onPageCreate: function(event,data){
         console.log('page is created');
         app.checkSession();
 
@@ -183,6 +208,9 @@ var app = {
         $.mobile.phonegapNavigationEnabled = true;
         $.mobile.autoInitializePage = false;
     }
+	
+	
+
 //    // Update DOM on a Received Event
 //    receivedEvent: function(id) {
 //        var parentElement = document.getElementById(id);
@@ -194,6 +222,12 @@ var app = {
 //
 //        console.log('Received Event: ' + id);
 //    }
-};
+
+	//////////////////////////Start main 
+}
 
 app.initialize();
+
+
+
+	
