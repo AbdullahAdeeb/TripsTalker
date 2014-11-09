@@ -39,7 +39,6 @@ D:\cordova_apps\TripsTalker\platforms\android\assets\www\js \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\main.html \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\plugins \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\css\images \
-D:\cordova_apps\TripsTalker\platforms\android\assets\www\css\index.css \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\css\jquery.mobile-1.4.3.css \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\css\jquery.mobile.icons-1.4.3.css \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\css\jquery.mobile.theme-1.4.3.min.css \
@@ -252,10 +251,12 @@ D:\cordova_apps\TripsTalker\platforms\android\assets\www\dsplib\shred.bundle.js 
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\dsplib\swagger.js \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\img\logo.png \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\js\index.js \
+D:\cordova_apps\TripsTalker\platforms\android\assets\www\js\io.js \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\js\jquery-2.1.1.js \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\js\jquery.mobile-1.4.3.js \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\js\jquery.mobile-1.4.4.js \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\js\main.js \
+D:\cordova_apps\TripsTalker\platforms\android\assets\www\js\socket.io-1.2.0.js \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\plugins\org.apache.cordova.dialogs \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\plugins\org.apache.cordova.splashscreen \
 D:\cordova_apps\TripsTalker\platforms\android\assets\www\plugins\org.apache.cordova.vibration \
