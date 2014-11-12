@@ -29,6 +29,7 @@ D:\Cordova\TripsTalker\platforms\android\ant-build\res\drawable-port-xhdpi\scree
 D:\Cordova\TripsTalker\platforms\android\ant-build\res\drawable-xhdpi\icon.png \
 D:\Cordova\TripsTalker\platforms\android\assets\www \
 D:\Cordova\TripsTalker\platforms\android\assets\_where-is-www.txt \
+D:\Cordova\TripsTalker\platforms\android\assets\www\Bugs.txt \
 D:\Cordova\TripsTalker\platforms\android\assets\www\cordova.js \
 D:\Cordova\TripsTalker\platforms\android\assets\www\cordova_plugins.js \
 D:\Cordova\TripsTalker\platforms\android\assets\www\css \

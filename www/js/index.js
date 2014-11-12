@@ -57,6 +57,8 @@ function login() {
         {"body":cred},
         function(response) {  //success handler
             window.localStorage.setItem("session",JSON.stringify(response));
+            window.localStorage.setItem('trips',[]);
+            window.localStorage.setItem('friends',[]);
             startSession();
 
         },
@@ -102,7 +104,6 @@ function getFriendsList(id){
                 // add listItem to the listElement
 
                 $('#friends_list').append(listItem);//.listview('refresh');
-
             }
 
         },
@@ -112,7 +113,9 @@ function getFriendsList(id){
     );
 }
 function checkSession(){
-    if(localStorage.getItem('session')!= undefined){
+    var s = localStorage.getItem('session');
+    if(s != undefined && s != null){
+        app.session = JSON.parse(s);
         startSession();
         return true;
     }else{
@@ -129,19 +132,15 @@ function checkSession(){
 }
 
 function startSession(){
-	app.session = JSON.parse(localStorage.session);
-	console.log('session found in local storage, no need to log in');
+	
+	console.log('old session found');
 	$.mobile.pageContainer.pagecontainer('change', '#trips_page', {
 		transition: 'flip',
 		changeHash: false,
 		reverse: false,
 		showLoadMsg: true
 	});
-<<<<<<< HEAD
-
-//    setTimeout(function(){ 
-		getFriendsList(8);
-//    }, 3000);  	
+    getFriendsList(app.session.id);
 }
 
 var nav = {
@@ -156,19 +155,18 @@ var nav = {
 
     slideUp: function(page,track){
         $.mobile.pageContainer.pagecontainer('change', '#'+page, {
-                    transition: 'slidedown',
-                    changeHash: track,
-                    reverse: true,
-                    showLoadMsg: true
-                });
+            transition: 'slidedown',
+            changeHash: track,
+            reverse: true,
+            showLoadMsg: true
+        });
+    },
+    
+    goTo: function(page,track){
+        $.mobile.pageContainer.pagecontainer('change', '#'+page, {changeHash: track});
     }
-=======
-	// setTimeout(getFriendsList(8),40000);
-	setTimeout(function(){	
-		getFriendsList(app.session.id);
-    }, 1000);  	
->>>>>>> origin/master
 }
+
 
 var app = {
 	"session":"",		// for session id
@@ -184,27 +182,76 @@ var app = {
     bindEvents: function() {
         console.log('Binding Events');
         $(document).on('deviceready', this.onDeviceReady);
-        $(document).on("pagecreate","#login_page", this.onPageCreate);
-//        $.mobile.pageContainer.pagecontainer("load", this.onPageCreate);  // doesn't work
+        $(document).on("pagecreate","#login_page", this.onLoginPage);
+        $(document).on("pagecreate", "#trip_page", this.onTripPage);
+        $(document).on("pagecontainerbeforeshow", this.onBeforeShow);        
+    },    
         
-    
-    },    
-    onPageCreate: function(event,data){
-        console.log('page created');
-    },    
-    // deviceready Event Handler
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         console.log('device is ready');
         $(document).on('apiReady',function(){
             console.log('api is ready');
             checkSession();
         });
+    },
+    
+    onLoginPage: function(event,data){
+        console.log('login page created');
+        
+    },
+    
+    onTripPage: function(event,ui) {
+            console.log('trip-page init');
+            $( document ).on( "swipeleft swiperight", "#trip_page", function( e ) {
+                // We check if there is no open panel on the page because otherwise
+                // a swipe to close the left panel would also open the right panel (and v.v.).
+                // We do this by checking the data that the framework stores on the page element (panel: open).
+                if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+                    if ( e.type === "swipeleft"  ) {
+                        $( "#trip_panel" ).panel( "open" );
+                    } else if ( e.type === "swiperight" ) {
+                        $( "#no_panel" ).panel( "open" );
+                    }
+                }
+            });
+    },
+    onBeforeShow: function(event,ui){
+        var activePage = $.mobile.pageContainer.pagecontainer("getActivePage")[0].id;
+        console.log('active page: '+activePage);
+        if(activePage == "trips_page") {
+            $("#trips_list").listview('refresh');
+        }
     }
 }
 
-app.initialize();
-
-
+var trip = {
+    list: new Array(),
+    new: function(){
+        var name = $(trip_name).val();
+        var loc = $(trip_location).val();
+        var id = 212; //get this from socket.io
+        
+//        localStorage.trips.push(name,{'id':id,'loc':loc});
+        
+        this.list.push({id:'first',name: name,participants:''});
+        $('#trips_list').append('<li><a href=javascript:trip.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');
+        nav.goTo('trips_page',false);
+    },
+    addToDB: function(){
+    
+    },
+    getListFromDB: function(){
+    
+    },
+    updateUI: function(){
+        
+    },
+    open: function(name){
+        $('#trip_page_header').html(name);
+        nav.goTo('trip_page',true);
+        
+    }
+    
+    
+}
 

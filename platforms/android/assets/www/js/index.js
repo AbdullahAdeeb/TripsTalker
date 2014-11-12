@@ -112,7 +112,9 @@ function getFriendsList(id){
     );
 }
 function checkSession(){
-    if(localStorage.getItem('session')!= undefined){
+    var s = localStorage.getItem('session');
+    if(s != undefined && s != null){
+        app.session = JSON.parse(s);
         startSession();
         return true;
     }else{
@@ -129,17 +131,15 @@ function checkSession(){
 }
 
 function startSession(){
-	console.log('session found in local storage, no need to log in');
+	
+	console.log('old session found');
 	$.mobile.pageContainer.pagecontainer('change', '#trips_page', {
 		transition: 'flip',
 		changeHash: false,
 		reverse: false,
 		showLoadMsg: true
 	});
-
-//    setTimeout(function(){ 
-		getFriendsList(8);
-//    }, 3000);  	
+    getFriendsList(app.session.id);
 }
 
 var nav = {
@@ -154,15 +154,16 @@ var nav = {
 
     slideUp: function(page,track){
         $.mobile.pageContainer.pagecontainer('change', '#'+page, {
-                    transition: 'slidedown',
-                    changeHash: track,
-                    reverse: true,
-                    showLoadMsg: true
-                });
+            transition: 'slidedown',
+            changeHash: track,
+            reverse: true,
+            showLoadMsg: true
+        });
     }
 }
 
 var app = {
+	"session":"",		// for session id
     // Application Constructor
     initialize: function() {
         this.bindEvents();
@@ -175,26 +176,38 @@ var app = {
     bindEvents: function() {
         console.log('Binding Events');
         $(document).on('deviceready', this.onDeviceReady);
-        $(document).on("pagecreate","#login_page", this.onPageCreate);
-//        $.mobile.pageContainer.pagecontainer("load", this.onPageCreate);  // doesn't work
+        $(document).on("pageinit","#login_page", this.onLoginPage);
+        $(document).on("pageinit", "#trip_page", this.onTripPage);
+    },    
         
-    
-    },    
-    onPageCreate: function(event,data){
-        console.log('page is created');
-        $.mobile.loading("show");
-    },    
-    // deviceready Event Handler
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         console.log('device is ready');
         $(document).on('apiReady',function(){
             console.log('api is ready');
             checkSession();
-            $.mobile.loading("hide");
         });
-    }
+    },
+    
+    onLoginPage: function(event,data){
+        console.log('login page created');
+        
+    },
+    
+    onTripPage: function() {
+            console.log('trip-page init');
+            $( document ).on( "swipeleft swiperight", "#trip_page", function( e ) {
+                // We check if there is no open panel on the page because otherwise
+                // a swipe to close the left panel would also open the right panel (and v.v.).
+                // We do this by checking the data that the framework stores on the page element (panel: open).
+                if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+                    if ( e.type === "swipeleft"  ) {
+                        $( "#trip_panel" ).panel( "open" );
+                    } else if ( e.type === "swiperight" ) {
+                        $( "#no_panel" ).panel( "open" );
+                    }
+                }
+            });
+        });
 }
 
 app.initialize();

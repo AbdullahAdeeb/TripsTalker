@@ -100,6 +100,76 @@
 	</div>
 -->
 
+<!------------------------------------------------------------------->
+<!------------------------- Trips page ------------------------------>
+<!------------------------------------------------------------------->
+	<div data-role="page" id="trips_page" data-add-back-btn="true">
+		<div data-role="header" data-theme="b" data-position="fixed" >
+			 <h3>Trips Talker</h3>
+             <div data-role="navbar" data-theme="b" data-position="fixed">
+				<ul>
+					<li><a href="#friends_page" data-icon="user"  data-theme="b"  data-transition="none">Friends</a></li>
+					<li><a href="#trips_page" data-icon="comment"  data-theme="b"  data-transition="none" class = "ui-btn-active ui-state-persist"> Trips</a></li>
+					<li><a href="#settings_page" data-icon="gear"  data-theme="b"  data-transition="none">Settings</a></li>
+				</ul> 
+            </div>     
+		</div>
+		<div data-role="content">
+            <ul id="trips-list">
+            </ul>
+        </div>
+        <a class="ui-btn ui-btn-b ui-shadow-icon" href="#newtrip_page">New Trip</a>
+	</div>
+<!------------------------------------------------------------------------>
+<!----------------------------A TRIP-------------------------------------->
+<!------------------------------------------------------------------------>
+<div data-role="page" id="trip_page" data-add-back-btn="true">
+    
+                    <!-- Panel -->
+    <div data-role="panel" id="trip_panel" data-position="right" data-display="overlay">
+        <a href="#trip_panel">Open panel</a>
+    </div>
+    
+                    <!-- Header -->
+    <div data-role="header" data-theme="b" data-position="fixed">
+        <h1>New Trip</h1>
+        <a href="#trip_panel" data-icon="bars" class="ui-btn-right">Open panel</a>
+
+    </div>
+    
+                    <!-- Content -->
+    <div data-role="content">
+        <div style="border:solid; height:300px;width:100%;">
+                <ul id="messages"></ul>
+            </div>
+            <form action="" id="msg_form">
+            <input type="text" name="msg" id="msg">
+            <button>Send</button>
+            </form>
+
+    </div>
+</div>
+    
+<!------------------------------------------------------------------------>
+<!---------------------------NEW TRIP------------------------------------->
+<!------------------------------------------------------------------------>
+<div data-role="page" id="newtrip_page" data-add-back-btn="true">
+    <div data-role="header" data-theme="b" data-position="fixed">
+        <h1>New Trip</h1>
+
+    </div>
+    <div data-role="content">
+        <div class="ui-body ui-body-a">
+        <label for="trip_name">Trip Name: </label> 
+        <input type="text" name="trip_name" id="trip_name"> 
+        <label for="trip_location">Location:</label> 
+        <input type="text" name="trip_location" id="trip_location">
+        <button type="button" data-role="button" data-theme="b" onClick="newTrip();">Bon voyage</button>
+        </div>
+
+    </div>
+</div>
+    
 <!--------------------------------------------------------------------->
 <!------------------------- friends page ------------------------------>
 <!--------------------------------------------------------------------->
@@ -109,8 +179,8 @@
 		    <div data-role="navbar" data-theme="b" data-position="fixed">
         
 				<ul>
-					<li><a href="#friends_page" onclick="getFriendsList(8);" data-icon="user"  data-theme="b"  data-transition="none" class = "ui-btn-active ui-state-persist">Friends</a></li>
-					<li><a href="#trips_page" data-icon="comment"  data-theme="b"  data-transition="none"> Trips</a></li>
+					<li><a href="#friends_page" data-icon="user"  data-theme="b"  data-transition="none" class = "ui-btn-active ui-state-persist">Friends</a></li>
+					<li><a href="#trips_page" data-icon="comment"  data-theme="b"  data-transition="none">Trips</a></li>
 					<li><a href="#settings_page" data-icon="gear"  data-theme="b"  data-transition="none">Settings</a></li>
 				</ul> 
             </div>     
@@ -140,34 +210,6 @@
 		</ul>
 		</div>
 	</div>
-
-<!------------------------------------------------------------------->
-<!------------------------- Trips page ------------------------------>
-<!------------------------------------------------------------------->
-	<div data-role="page" id="trips_page" data-add-back-btn="true">
-		<div data-role="header" data-theme="b" data-position="fixed" >
-			 <h3>Trips Talker</h3>
-             <div data-role="navbar" data-theme="b" data-position="fixed">
-				<ul>
-					<li><a href="#friends_page" data-icon="user"  data-theme="b"  data-transition="none">Friends</a></li>
-					<li><a href="#trips_page" data-icon="comment"  data-theme="b"  data-transition="none" class = "ui-btn-active ui-state-persist"> Trips</a></li>
-					<li><a href="#settings_page" data-icon="gear"  data-theme="b"  data-transition="none">Settings</a></li>
-				</ul> 
-            </div>     
-		</div>
-		<div data-role="content">
-            <div style="border:solid; height:300px;width:100%;">
-                <ul id="messages"></ul>
-            </div>
-            <form action="" id="msg_form">
-            <input type="text" name="msg" id="msg">
-            <button>Send</button>
-            </form>
-        </div>
-        <div data-role="footer">
-                    <a data-theme="b" href="#newtrip_page">New Trip</a>
-        </div>
-	</div>
     
 <!---------------------------------------------------------------------->
 <!------------------------- settings page ------------------------------>
@@ -185,42 +227,10 @@
             </div>   
 		</div>
 		<div data-role="content" data-theme="a" style="padding: 15px">
-            <ul>
-                <li><button class="ui-btn ui-shadow-icon ui-btn-b" onclick="logout();" >Log out</button></li>
-            </ul>
+            <button class="ui-btn ui-shadow-icon ui-btn-b" onclick="logout();" >Log out</button>
         </div>
 	</div>
 
-<!------------------------------------------------------------------------>
-<!---------------------------NEW TRIP------------------------------------->
-<!------------------------------------------------------------------------>
-<div data-role="page" id="newtrip_page" data-add-back-btn="true">
-    <div data-role="header" data-theme="b" data-position="fixed">
-        <h1>New Trip</h1>
-<!--
-        <div data-role="navbar" data-theme="b" data-position="fixed">            
-            <ul>
-                <li></li>
-                
-            </ul> 
-        </div>     
--->
-
-    </div>
-    <div data-role="content">
-        <form>
-            <div class="ui-body ui-body-a">
-            <label for="trip_name">Trip Name: </label> 
-            <input type="text" name="trip_name" id="trip_name"> 
-            <label for="trip_location">Location:</label> 
-            <input type="text" name="trip_location" id="trip_location">
-            <button type="button" data-role="button" data-theme="b" onClick="newTrip();">Bon voyage</button>
-            </div>
-        </form>
-
-    </div>
-</div>
-    
 <!------------------------------------------------------------------------>
 <!---------------------------ERROR POPUP---------------------------------->
 <!------------------------------------------------------------------------>
