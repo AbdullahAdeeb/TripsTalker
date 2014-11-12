@@ -60,8 +60,8 @@ function login() {
             
             
 ////////////////////////////////////////////////////////////////////////////////// TODO get these from the server
-            window.localStorage.setItem('trips',JSON.stringify({'id':''}));
-            window.localStorage.setItem('friends',JSON.stringify({'id':''}));
+            window.localStorage.setItem('trips',JSON.stringify([{'id':''}]));
+            window.localStorage.setItem('friends',JSON.stringify([{'id':''}]));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
             startSession();
 
@@ -241,7 +241,7 @@ var trips = {
         var id = 212; //get this from socket.io
 
         
-        this.list.push({id:'first',name: name,participants:''});
+        trips.list.push({id:'first',name: name,participants:''});
         window.localStorage.setItem('trips',JSON.stringify(trips.list));
         
         $('#trips_list').append('<li><a href=javascript:trips.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');

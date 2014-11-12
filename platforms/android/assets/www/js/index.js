@@ -57,8 +57,12 @@ function login() {
         {"body":cred},
         function(response) {  //success handler
             window.localStorage.setItem("session",JSON.stringify(response));
-            window.localStorage.setItem('trips',[]);
-            window.localStorage.setItem('friends',[]);
+            
+            
+////////////////////////////////////////////////////////////////////////////////// TODO get these from the server
+            window.localStorage.setItem('trips',JSON.stringify([{'id':''}]));
+            window.localStorage.setItem('friends',JSON.stringify([{'id':''}]));
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
             startSession();
 
         },
@@ -134,13 +138,18 @@ function checkSession(){
 function startSession(){
 	
 	console.log('old session found');
+    trips.list = JSON.parse(window.localStorage.getItem('trips'));
+    
 	$.mobile.pageContainer.pagecontainer('change', '#trips_page', {
 		transition: 'flip',
 		changeHash: false,
 		reverse: false,
 		showLoadMsg: true
 	});
+    
+    /////////////////////////////////////////////////////////////////////change this to get frinds from local storage 
     getFriendsList(app.session.id);
+    
 }
 
 var nav = {
@@ -224,17 +233,18 @@ var app = {
     }
 }
 
-var trip = {
-    list: new Array(),
+var trips = {
+    list: [],
     new: function(){
         var name = $(trip_name).val();
         var loc = $(trip_location).val();
         var id = 212; //get this from socket.io
+
         
-//        localStorage.trips.push(name,{'id':id,'loc':loc});
+        trips.list.push({id:'first',name: name,participants:''});
+        window.localStorage.setItem('trips',JSON.stringify(trips.list));
         
-        this.list.push({id:'first',name: name,participants:''});
-        $('#trips_list').append('<li><a href=javascript:trip.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');
+        $('#trips_list').append('<li><a href=javascript:trips.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');
         nav.goTo('trips_page',false);
     },
     addToDB: function(){
