@@ -131,6 +131,7 @@ function getFriendsList(id){
 }
 
 function startSession(){
+	app.session = JSON.parse(localStorage.session);
 	console.log('session found in local storage, no need to log in');
 	$.mobile.pageContainer.pagecontainer('change', '#trips_page', {
 		transition: 'flip',
@@ -139,12 +140,13 @@ function startSession(){
 		showLoadMsg: true
 	});
 	// setTimeout(getFriendsList(8),40000);
-	setTimeout(function(){ 
-		getFriendsList(8);
+	setTimeout(function(){	
+		getFriendsList(app.session.id);
     }, 1000);  	
 }
 
 var app = {
+	"session":"",		// for session id
     // Application Constructor
     initialize: function() {
         $.mobile.allowCrossDomainPages = true;

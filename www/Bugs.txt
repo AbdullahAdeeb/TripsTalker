@@ -1,0 +1,3 @@
+Bug 1: When log out , the old users friends remain in the friends list 
+
+Bug 2 :
