@@ -57,6 +57,8 @@ function login() {
         {"body":cred},
         function(response) {  //success handler
             window.localStorage.setItem("session",JSON.stringify(response));
+            window.localStorage.setItem('trips',[]);
+            window.localStorage.setItem('friends',[]);
             startSession();
 
         },
@@ -102,7 +104,6 @@ function getFriendsList(id){
                 // add listItem to the listElement
 
                 $('#friends_list').append(listItem);//.listview('refresh');
-
             }
 
         },
@@ -159,8 +160,13 @@ var nav = {
             reverse: true,
             showLoadMsg: true
         });
+    },
+    
+    goTo: function(page,track){
+        $.mobile.pageContainer.pagecontainer('change', '#'+page, {changeHash: track});
     }
 }
+
 
 var app = {
 	"session":"",		// for session id
@@ -176,8 +182,9 @@ var app = {
     bindEvents: function() {
         console.log('Binding Events');
         $(document).on('deviceready', this.onDeviceReady);
-        $(document).on("pageinit","#login_page", this.onLoginPage);
-        $(document).on("pageinit", "#trip_page", this.onTripPage);
+        $(document).on("pagecreate","#login_page", this.onLoginPage);
+        $(document).on("pagecreate", "#trip_page", this.onTripPage);
+        $(document).on("pagecontainerbeforeshow", this.onBeforeShow);        
     },    
         
     onDeviceReady: function() {
@@ -193,7 +200,7 @@ var app = {
         
     },
     
-    onTripPage: function() {
+    onTripPage: function(event,ui) {
             console.log('trip-page init');
             $( document ).on( "swipeleft swiperight", "#trip_page", function( e ) {
                 // We check if there is no open panel on the page because otherwise
@@ -207,10 +214,44 @@ var app = {
                     }
                 }
             });
-        });
+    },
+    onBeforeShow: function(event,ui){
+        var activePage = $.mobile.pageContainer.pagecontainer("getActivePage")[0].id;
+        console.log('active page: '+activePage);
+        if(activePage == "trips_page") {
+            $("#trips_list").listview('refresh');
+        }
+    }
 }
 
-app.initialize();
-
-
+var trip = {
+    list: new Array(),
+    new: function(){
+        var name = $(trip_name).val();
+        var loc = $(trip_location).val();
+        var id = 212; //get this from socket.io
+        
+//        localStorage.trips.push(name,{'id':id,'loc':loc});
+        
+        this.list.push({id:'first',name: name,participants:''});
+        $('#trips_list').append('<li><a href=javascript:trip.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');
+        nav.goTo('trips_page',false);
+    },
+    addToDB: function(){
+    
+    },
+    getListFromDB: function(){
+    
+    },
+    updateUI: function(){
+        
+    },
+    open: function(name){
+        $('#trip_page_header').html(name);
+        nav.goTo('trip_page',true);
+        
+    }
+    
+    
+}
 

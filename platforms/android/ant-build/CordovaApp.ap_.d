@@ -249,6 +249,7 @@ D:\Cordova\TripsTalker\platforms\android\assets\www\css\images\icons-svg\video-w
 D:\Cordova\TripsTalker\platforms\android\assets\www\dsplib\sdk-init.js \
 D:\Cordova\TripsTalker\platforms\android\assets\www\dsplib\shred.bundle.js \
 D:\Cordova\TripsTalker\platforms\android\assets\www\dsplib\swagger.js \
+D:\Cordova\TripsTalker\platforms\android\assets\www\img\ants.png \
 D:\Cordova\TripsTalker\platforms\android\assets\www\img\logo.png \
 D:\Cordova\TripsTalker\platforms\android\assets\www\js\index.js \
 D:\Cordova\TripsTalker\platforms\android\assets\www\js\io.js \

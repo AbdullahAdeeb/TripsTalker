@@ -115,10 +115,11 @@
             </div>     
 		</div>
 		<div data-role="content">
-            <ul id="trips-list">
+            <ul id="trips_list" data-role="listview">
+                <li><a><img src="img/ants.png"></img><h1>trip 1</h1><p>hello</p></a></li>
             </ul>
         </div>
-        <a class="ui-btn ui-btn-b ui-shadow-icon" href="#newtrip_page">New Trip</a>
+        <a class="ui-btn ui-btn-b ui-shadow-icon" href="javascript:nav.goTo('newtrip_page',false);">New Trip</a>
 	</div>
 <!------------------------------------------------------------------------>
 <!----------------------------A TRIP-------------------------------------->
@@ -132,7 +133,7 @@
     
                     <!-- Header -->
     <div data-role="header" data-theme="b" data-position="fixed">
-        <h1>New Trip</h1>
+        <h1  id='trip_page_header'>New Trip</h1>
         <a href="#trip_panel" data-icon="bars" class="ui-btn-right">Open panel</a>
 
     </div>
@@ -159,13 +160,15 @@
 
     </div>
     <div data-role="content">
-        <div class="ui-body ui-body-a">
-        <label for="trip_name">Trip Name: </label> 
-        <input type="text" name="trip_name" id="trip_name"> 
-        <label for="trip_location">Location:</label> 
-        <input type="text" name="trip_location" id="trip_location">
-        <button type="button" data-role="button" data-theme="b" onClick="newTrip();">Bon voyage</button>
-        </div>
+        <form id="newtrip_form" data-ajax="false" action="">
+            <div class="ui-body ui-body-a">
+                <label for="trip_name">Trip Name: </label> 
+                <input type="text" name="trip_name" id="trip_name"> 
+                <label for="trip_location">Location:</label> 
+                <input type="text" name="trip_location" id="trip_location">
+                <button type="button" data-role="button" data-theme="b" onClick="trip.new();">Bon voyage</button>
+            </div>
+        </form>
 
     </div>
 </div>
@@ -270,6 +273,10 @@
     <script src="js/jquery.mobile-1.4.4.js"></script>
     <script src="js/index.js"></script>
     <script src="io.js"></script>
+    <script>
+        app.initialize();
+        app.onDeviceReady();
+    </script>
 
 
 </body>
