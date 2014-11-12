@@ -129,6 +129,7 @@ function checkSession(){
 }
 
 function startSession(){
+	app.session = JSON.parse(localStorage.session);
 	console.log('session found in local storage, no need to log in');
 	$.mobile.pageContainer.pagecontainer('change', '#trips_page', {
 		transition: 'flip',
@@ -136,6 +137,7 @@ function startSession(){
 		reverse: false,
 		showLoadMsg: true
 	});
+<<<<<<< HEAD
 
 //    setTimeout(function(){ 
 		getFriendsList(8);
@@ -160,9 +162,16 @@ var nav = {
                     showLoadMsg: true
                 });
     }
+=======
+	// setTimeout(getFriendsList(8),40000);
+	setTimeout(function(){	
+		getFriendsList(app.session.id);
+    }, 1000);  	
+>>>>>>> origin/master
 }
 
 var app = {
+	"session":"",		// for session id
     // Application Constructor
     initialize: function() {
         this.bindEvents();
