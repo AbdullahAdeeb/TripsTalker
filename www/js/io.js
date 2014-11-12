@@ -7,5 +7,6 @@ $('#msg_form').submit(function(){
 });
 
 socket.on('chat message',function(msg){
+    console.log('msg='+msg);
     $('#messages').append($('<li>').text(msg));
 });

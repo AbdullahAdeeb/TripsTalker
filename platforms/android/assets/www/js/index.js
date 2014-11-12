@@ -23,17 +23,17 @@ function register() {
     var fname = $('#register_first_name').val();
     var lname = $('#register_last_name').val();
     var newUser = {
-          "email": email,
-          "first_name": fname,
-          "last_name": lname,
-          "new_password": password
+            "email": email,
+            "first_name": fname,
+            "last_name": lname,
+            "new_password": password
         };  // TODO : encrypt password i.e. json_encrypt()
     
     window.df.apis.user.register(
         {"login":true,"body":newUser},
         function (response){
                 alert("Registeration worked");
-        },function (response){
+        }, function (response){
             popError(response.body.data.error[0].message);
         }             // error handler
     );
@@ -55,7 +55,7 @@ function login() {
     
     window.df.apis.user.login(
         {"body":cred},
-        function(response){  //success handler
+        function(response) {  //success handler
             window.localStorage.setItem("session",JSON.stringify(response));
             startSession();
 
@@ -75,24 +75,6 @@ function logout(){
     });
 }
 
-function slideDown(page,track){
-    $.mobile.pageContainer.pagecontainer('change', '#'+page, {
-                transition: 'slidedown',
-                changeHash: track,
-                reverse: true,
-                showLoadMsg: true
-            });
-}
-
-function slideUp(page,track){
-    $.mobile.pageContainer.pagecontainer('change', '#'+page, {
-                transition: 'slideup',
-                changeHash: track,
-                reverse: true,
-                showLoadMsg: true
-            });
-}
-
 
 function popError(message){
     $("#error-dialog-content").html(message);
@@ -102,32 +84,48 @@ function popError(message){
 
 ///////////////////////// GET FRIENDS LIST FUCNTION
 function getFriendsList(id){
-	console.log(window);
-	window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, function (response) {
-		console.log ('we are getting friends!!');
-		console.log((response.record[0].friends));
-		var friends = (response.record[0].friends);
-		var friendsArray = friends.split(";");
-		console.log (friendsArray);
-		var numberOfFriends = friendsArray.length;
+	window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, 
+        function (response) {
+            console.log ('we are getting friends!!');
+            var friends = (response.record[0].friends);
+            var friendsArray = friends.split(";");
+            console.log (friendsArray);
+            var numberOfFriends = friendsArray.length;
 
-		for( var i =  0 ; i < numberOfFriends ; ++i){
-			
-			// create a <li> for each one.
-			var listItem = document.createElement("li");
+            for( var i =  0 ; i < numberOfFriends ; ++i){
 
-			// add the item text
-			listItem.innerHTML = friendsArray[i];
-			console.log(listItem);
-			// add listItem to the listElement
+                // create a <li> for each one.
+                var listItem = document.createElement("li");
 
-			$('#friends_list').append(listItem);//.listview('refresh');
+                // add the item text
+                listItem.innerHTML = friendsArray[i];
+                // add listItem to the listElement
 
-		}
+                $('#friends_list').append(listItem);//.listview('refresh');
 
-	} ,function (response){popError("broblem");}
-	);
-	
+            }
+
+        },
+        function (response){
+            popError("broblem, can't get your friends!");
+        }
+    );
+}
+function checkSession(){
+    if(localStorage.getItem('session')!= undefined){
+        startSession();
+        return true;
+    }else{
+        console.log('no session found in local storage must log in');
+        $.mobile.pageContainer.pagecontainer('change', '#login_page', {
+            transition: 'flip',
+            changeHash: false,
+            reverse: false,
+            showLoadMsg: true
+        });
+        return false;
+    }
+
 }
 
 function startSession(){
@@ -135,99 +133,71 @@ function startSession(){
 	$.mobile.pageContainer.pagecontainer('change', '#trips_page', {
 		transition: 'flip',
 		changeHash: false,
-		reverse: true,
+		reverse: false,
 		showLoadMsg: true
 	});
-	// setTimeout(getFriendsList(8),40000);
-	setTimeout(function(){ 
+
+//    setTimeout(function(){ 
 		getFriendsList(8);
-    }, 1000);  	
+//    }, 3000);  	
+}
+
+var nav = {
+    slideDown: function(page,track){
+        $.mobile.pageContainer.pagecontainer('change', '#'+page, {
+            transition: 'slidedown',
+            changeHash: track,
+            reverse: false,
+            showLoadMsg: true
+            });
+    },
+
+    slideUp: function(page,track){
+        $.mobile.pageContainer.pagecontainer('change', '#'+page, {
+                    transition: 'slidedown',
+                    changeHash: track,
+                    reverse: true,
+                    showLoadMsg: true
+                });
+    }
 }
 
 var app = {
     // Application Constructor
     initialize: function() {
-        $.mobile.allowCrossDomainPages = true;
-        $.support.cors = true;
         this.bindEvents();
     },
     
-    checkSession: function(){
-        if(localStorage.getItem('session')!= undefined){
-			startSession();
-            return true;
-        }else{
-            console.log('no session found in local storage must log in');
-            $.mobile.pageContainer.pagecontainer('change', '#login_page', {
-                transition: 'flip',
-                changeHash: false,
-                reverse: true,
-                showLoadMsg: true
-            });
-            return false;
-        }
-        
-    },
-    
-//    // Bind Event Listeners
-//    //
-//    // Bind any events that are required on startup. Common events are:
-//    // 'load', 'deviceready', 'offline', and 'online'.
+    // Bind Event Listeners
+    //
+    // Bind any events that are required on startup. Common events are:
+    // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
-
-        $(document).on("mobileinit",this.onMobileinit);
+        console.log('Binding Events');
+        $(document).on('deviceready', this.onDeviceReady);
         $(document).on("pagecreate","#login_page", this.onPageCreate);
-        // $.mobile.pageContainer.pagecontainer("load", this.onPageCreate);
-        document.addEventListener('deviceready', this.onDeviceReady, false);
+//        $.mobile.pageContainer.pagecontainer("load", this.onPageCreate);  // doesn't work
         
-        $(window).on( "navigate", function( event, data ) {
-//        console.log( data.state.info );
-//        console.log( data.state.direction );
-//		  console.log( data.state.url );
-//		  console.log( data.state.hash );
-        });
-    },
     
+    },    
+    onPageCreate: function(event,data){
+        console.log('page is created');
+        $.mobile.loading("show");
+    },    
     // deviceready Event Handler
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-//        app.receivedEvent('deviceready');
         console.log('device is ready');
-        
-    },
-    
-    onPageCreate: function(event,data){
-        console.log('page is created');
-        app.checkSession();
-
-    },
-    
-    onMobileinit: function(){
-        console.log('mobile is init');
-        $.mobile.phonegapNavigationEnabled = true;
-        $.mobile.autoInitializePage = false;
+        $(document).on('apiReady',function(){
+            console.log('api is ready');
+            checkSession();
+            $.mobile.loading("hide");
+        });
     }
-	
-	
-
-//    // Update DOM on a Received Event
-//    receivedEvent: function(id) {
-//        var parentElement = document.getElementById(id);
-//        var listeningElement = parentElement.querySelector('.listening');
-//        var receivedElement = parentElement.querySelector('.received');
-//
-//        listeningElement.setAttribute('style', 'display:none;');
-//        receivedElement.setAttribute('style', 'display:block;');
-//
-//        console.log('Received Event: ' + id);
-//    }
-
-	//////////////////////////Start main 
 }
 
 app.initialize();
 
 
 
-	
