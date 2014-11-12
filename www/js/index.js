@@ -229,6 +229,8 @@ var app = {
         console.log('active page: '+activePage);
         if(activePage == "trips_page") {
             $("#trips_list").listview('refresh');
+        }else if(activePage == "friends_page") {
+            $("#friends_list").listview('refresh');
         }
     }
 }
