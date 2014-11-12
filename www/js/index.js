@@ -60,8 +60,8 @@ function login() {
             
             
 ////////////////////////////////////////////////////////////////////////////////// TODO get these from the server
-            window.localStorage.setItem('trips',[]);
-            window.localStorage.setItem('friends',[]);
+            window.localStorage.setItem('trips',JSON.stringify({'id':''}));
+            window.localStorage.setItem('friends',JSON.stringify({'id':''}));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
             startSession();
 
@@ -242,7 +242,7 @@ var trips = {
 
         
         this.list.push({id:'first',name: name,participants:''});
-        window.localStorage.set('trips',JSON.stringify(trips.list));
+        window.localStorage.setItem('trips',JSON.stringify(trips.list));
         
         $('#trips_list').append('<li><a href=javascript:trips.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');
         nav.goTo('trips_page',false);
