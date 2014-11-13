@@ -44,33 +44,6 @@ function resetPWD(){
     popError('wait for it');
 }
 
-function login() {
-    var email = $('#login_email').val();
-    var password = $('#login_password').val();
-    var cred = {
-          "email": email,
-          "password": password,
-          "duration": 0};
-
-    
-    window.df.apis.user.login(
-        {"body":cred},
-        function(response) {  //success handler
-            window.localStorage.setItem("session",JSON.stringify(response));
-            
-            
-////////////////////////////////////////////////////////////////////////////////// TODO get these from the server
-            window.localStorage.setItem('trips',JSON.stringify([{'id':''}]));
-            window.localStorage.setItem('friends',JSON.stringify([{'id':''}]));
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            startSession();
-
-        },
-        function(response){ //error handler
-            popError(response.body.data.error[0].message);            
-        });
-}
-
 function logout(){
     window.localStorage.clear();
     $.mobile.pageContainer.pagecontainer('change', '#login_page', {
@@ -88,70 +61,28 @@ function popError(message){
     $('#errorpop').popup('open', {transition: 'pop'});
 }        
 
-///////////////////////// GET FRIENDS LIST FUCNTION
-function getFriendsList(id){
-	window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, 
-        function (response) {
-            console.log ('we are getting friends!!');
-            var friends = (response.record[0].friends);
-            var friendsArray = friends.split(";");
-            console.log (friendsArray);
-            var numberOfFriends = friendsArray.length;
 
-            for( var i =  0 ; i < numberOfFriends ; ++i){
 
-                // create a <li> for each one.
-                var listItem = document.createElement("li");
-
-                // add the item text
-                listItem.innerHTML = friendsArray[i];
-                // add listItem to the listElement
-
-                $('#friends_list').append(listItem);//.listview('refresh');
-            }
-
-        },
-        function (response){
-            popError("broblem, can't get your friends!");
-        }
-    );
-}
 function checkSession(){
     var s = localStorage.getItem('session');
-    if(s != undefined && s != null){
-        app.session = JSON.parse(s);
-        startSession();
+    if(s != undefined && s != null){            // session is found 
+        console.log('old session found');
+        app.load();
+        friends.load();
+        trips.load();
+        nav.flipPage('trips_page',false);
         return true;
-    }else{
+    }else{                                      //no session is found, take use to login
         console.log('no session found in local storage must log in');
-        $.mobile.pageContainer.pagecontainer('change', '#login_page', {
-            transition: 'flip',
-            changeHash: false,
-            reverse: false,
-            showLoadMsg: true
-        });
+        nav.flipPage('login_page',false);
         return false;
     }
 
 }
 
-function startSession(){
-	
-	console.log('old session found');
-    trips.list = JSON.parse(window.localStorage.getItem('trips'));
-    
-	$.mobile.pageContainer.pagecontainer('change', '#trips_page', {
-		transition: 'flip',
-		changeHash: false,
-		reverse: false,
-		showLoadMsg: true
-	});
-    
-    /////////////////////////////////////////////////////////////////////change this to get frinds from local storage 
-    getFriendsList(app.session.id);
-    
-}
-
+//////////////////////////////////////////////////
+//               NAV
+//////////////////////////////////////////////////
 var nav = {
     slideDown: function(page,track){
         $.mobile.pageContainer.pagecontainer('change', '#'+page, {
@@ -173,17 +104,56 @@ var nav = {
     
     goTo: function(page,track){
         $.mobile.pageContainer.pagecontainer('change', '#'+page, {changeHash: track});
+    },
+    
+    flipPage: function(page,track){
+        $.mobile.pageContainer.pagecontainer('change', '#'+page, {
+            transition: 'flip',
+            changeHash: track,
+            reverse: true,
+            showLoadMsg: true
+        });
     }
 }
 
-
+//////////////////////////////////////////////////
+//               APP
+//////////////////////////////////////////////////
 var app = {
 	"session":"",		// for session id
+	
     // Application Constructor
     initialize: function() {
         this.bindEvents();
     },
-    
+    //create a session and store it to local storage
+    login: function() {
+        var email = $('#login_email').val();
+        var password = $('#login_password').val();
+        var cred = {"email": email,"password": password,"duration": 0};
+        
+        window.df.apis.user.login({"body":cred},
+            function(response) {  //success handler
+                window.localStorage.setItem("session",JSON.stringify(response));
+                
+                trips.getListFromDB(app.session.id);
+                friends.getListFromDB(app.session.id);
+                
+                nav.flipPage('trips_page',false);
+
+            },
+            function(response){ //error handler
+                popError(response.body.data.error[0].message);            
+            });
+    },
+    load: function(){
+        app.session = JSON.parse(localStorage.getItem('session'));
+
+    },
+    update: function(){
+        trips.getListFromDB(app.session.id);
+        friends.getListFromDB(app.session.id);
+    },
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
@@ -229,29 +199,85 @@ var app = {
         console.log('active page: '+activePage);
         if(activePage == "trips_page") {
             $("#trips_list").listview('refresh');
+        }else if(activePage == "friends_page") {
+            $("#friends_list").listview('refresh');
+			console.log("friends is refreshed");
         }
     }
 }
+//////////////////////////////////////////////////
+//               FRIENDS
+//////////////////////////////////////////////////
+var friends = {
+    list:[],
+    pending:[],
+    requests:[],
+    //  GET FRIENDS LIST FUCNTIO
+    
+    // get data from DB -> local storage THEN onSuccess call friends.load()
+    getListFromDB: function(id){
+		window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, 
+			function (response) {
+				console.log ('we are getting friends!!');
+				console.log(response.record[0].friends);
+				window.localStorage.setItem("friends",response.record[0].friends);
+				window.localStorage.setItem("requests",response.record[0].requests);
+				window.localStorage.setItem("pending",response.record[0].pending);
+				friends.load();		
+            },function (response){
+                popError("broblem, can't get your friends!");
+            });
+    },
+    load: function(){
+        friends.list = window.localStorage.getItem("friends").split(";").sort();
+        friends.requests = window.localStorage.getItem("requests").split(";");
+        friends.pending = window.localStorage.getItem("pending").split(";");
 
+        friends.updateUI();
+    },
+    updateUI: function(){
+        var list="";
+        for( var i =  0 ; i < friends.list.length ; ++i){
+            //Add the friends as an li into friends list ul
+            list += ('<li><img src="img/ants.png"></img><h1>'+friends.list[i]+'</h1></li>');
+
+        }
+        $('#friends_list').html(list); 
+        
+        // TWO MORE LOOPS FOR PENDING AND REQUESTS
+        
+    }
+
+}
+
+//////////////////////////////////////////////////
+//               TRIPS
+//////////////////////////////////////////////////
 var trips = {
     list: [],
     new: function(){
         var name = $(trip_name).val();
         var loc = $(trip_location).val();
         var id = 212; //get this from socket.io
-
         
         trips.list.push({id:'first',name: name,participants:''});
         window.localStorage.setItem('trips',JSON.stringify(trips.list));
-        
         $('#trips_list').append('<li><a href=javascript:trips.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');
         nav.goTo('trips_page',false);
+        
+    },
+    load: function(){
+        trips.list = JSON.parse(window.localStorage.getItem('trips'));
+        
+        trips.updateUI();
     },
     addToDB: function(){
     
     },
     getListFromDB: function(){
-    
+        window.localStorage.setItem('trips',JSON.stringify([{'id':''}]));
+        //on success
+//        trips.load();
     },
     updateUI: function(){
         
