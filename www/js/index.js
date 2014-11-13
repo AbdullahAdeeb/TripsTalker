@@ -57,11 +57,13 @@ function login() {
         {"body":cred},
         function(response) {  //success handler
             window.localStorage.setItem("session",JSON.stringify(response));
+			app.session = response;
             
             
 ////////////////////////////////////////////////////////////////////////////////// TODO get these from the server
             window.localStorage.setItem('trips',JSON.stringify([{'id':''}]));
-            window.localStorage.setItem('friends',JSON.stringify([{'id':''}]));
+            friends.getListFromDB(app.session.id);
+		  //  window.localStorage.setItem('friends',JSON.stringify([{'id':''}]));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
             startSession();
 
@@ -88,8 +90,82 @@ function popError(message){
     $('#errorpop').popup('open', {transition: 'pop'});
 }        
 
+var friends = {
+list:[],
+pending:[],
+requests:[],
 ///////////////////////// GET FRIENDS LIST FUCNTION
-function getFriendsList(id){
+
+getFriendsList: function (id){
+	window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, 
+        function (response) {
+            console.log ('we are getting friends!!');
+            friends.list =(response.record[0].friends).split(";").sort();
+			//friends.requests = (response.record[0].requests).split(";");
+			//friends.pending =(response.record[0].pending).split(";");
+
+
+            console.log (friends.list);
+            var numberOfFriends = friends.list.length;
+			
+
+            for( var i =  0 ; i < friends.list.length ; ++i){
+				//Add the friends as an li into friends list ul
+                $('#friends_list').append('<li><img src="img/ants.png"></img><h1>'+friends.list[i]+'</h1></li>');//.listview('refresh');
+				
+            }
+			
+
+        },
+        function (response){
+            popError("broblem, can't get your friends!");
+        }
+		);
+	},
+	load: function(){
+		
+				friends.list=window.localStorage.getItem("friends").split(";").sort();
+				friends.requests = window.localStorage.getItem("requests").split(";");
+				friends.pending = window.localStorage.getItem("pending").split(";");
+				
+				friends.updateUI();
+    
+    },
+	// Still not using this function
+    getListFromDB: function(id){
+	
+		window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, 
+			function (response) {
+				console.log ('we are getting friends!!');
+				
+				window.localStorage.setItem("friends",response.record[0].friends);
+				window.localStorage.setItem("requests",response.record[0].requests);
+				window.localStorage.setItem("pending",response.record[0].pending);
+			
+				
+				friends.load();
+				
+				},
+				function (response){
+            popError("broblem, can't get your friends!");
+        }
+		);
+    
+    },
+    updateUI: function(){
+	
+            for( var i =  0 ; i < friends.list.length ; ++i){
+				//Add the friends as an li into friends list ul
+                $('#friends_list').append('<li><img src="img/ants.png"></img><h1>'+friends.list[i]+'</h1></li>');//.listview('refresh');
+				
+            }
+			// TWO MORE LOOPS FOR PENDING AND REQUESTS
+        
+    }
+
+}
+//OLD Function 
+/* function getFriendsList(id){
 	window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, 
         function (response) {
             console.log ('we are getting friends!!');
@@ -97,25 +173,23 @@ function getFriendsList(id){
             var friendsArray = friends.split(";");
             console.log (friendsArray);
             var numberOfFriends = friendsArray.length;
+			
 
             for( var i =  0 ; i < numberOfFriends ; ++i){
-
-                // create a <li> for each one.
-                var listItem = document.createElement("li");
-
-                // add the item text
-                listItem.innerHTML = friendsArray[i];
-                // add listItem to the listElement
-
-                $('#friends_list').append(listItem);//.listview('refresh');
+				//Add the friends as an li into friends list ul
+                $('#friends_list').append('<li><img src="img/ants.png"></img><h1>'+friendsArray[i]+'</h1></li>');//.listview('refresh');
+				// $('#trips_list').append('<li><a href=javascript:trips.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');
             }
+			
 
         },
         function (response){
             popError("broblem, can't get your friends!");
         }
     );
-}
+} */
+
+
 function checkSession(){
     var s = localStorage.getItem('session');
     if(s != undefined && s != null){
@@ -145,10 +219,11 @@ function startSession(){
 		changeHash: false,
 		reverse: false,
 		showLoadMsg: true
+	
 	});
     
     /////////////////////////////////////////////////////////////////////change this to get frinds from local storage 
-    getFriendsList(app.session.id);
+    friends.load();	//was getFriendsList
     
 }
 
@@ -179,6 +254,7 @@ var nav = {
 
 var app = {
 	"session":"",		// for session id
+	
     // Application Constructor
     initialize: function() {
         this.bindEvents();
@@ -231,6 +307,7 @@ var app = {
             $("#trips_list").listview('refresh');
         }else if(activePage == "friends_page") {
             $("#friends_list").listview('refresh');
+			console.log("friends is refreshed");
         }
     }
 }
