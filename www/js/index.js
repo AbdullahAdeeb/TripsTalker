@@ -16,69 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-function register() {
-    var email = $('#register_email').val();
-    var password = $('#register_password').val();
-    var repeat_password = $('#register_repeat_password').val();
-    var fname = $('#register_first_name').val();
-    var lname = $('#register_last_name').val();
-    var newUser = {
-            "email": email,
-            "first_name": fname,
-            "last_name": lname,
-            "new_password": password
-        };  // TODO : encrypt password i.e. json_encrypt()
-    
-    window.df.apis.user.register(
-        {"login":true,"body":newUser},
-        function (response){
-                alert("Registeration worked");
-        }, function (response){
-            popError(response.body.data.error[0].message);
-        }             // error handler
-    );
-}
-        
-
-function resetPWD(){
-    popError('wait for it');
-}
-
-function logout(){
-    window.localStorage.clear();
-    $.mobile.pageContainer.pagecontainer('change', '#login_page', {
-        transition: 'flip',
-        changeHash: false,
-        reverse: true,
-        showLoadMsg: true
-    });
-}
-
-
-function popError(message){
-    $("#error-dialog-content").html(message);
-    $('#errorpop').popup();
-    $('#errorpop').popup('open', {transition: 'pop'});
-}        
 
 
 
-function checkSession(){
-    var s = localStorage.getItem('session');
-    if(s != undefined && s != null){            // session is found 
-        console.log('old session found');
-        app.load();
-        friends.load();
-        trips.load();
-        nav.flipPage('trips_page',false);
-        return true;
-    }else{                                      //no session is found, take use to login
-        console.log('no session found in local storage must log in');
-        nav.flipPage('login_page',false);
-        return false;
-    }
 
-}
 
 //////////////////////////////////////////////////
 //               NAV
@@ -116,6 +57,37 @@ var nav = {
             reverse: true,
             showLoadMsg: true
         });
+    },
+    popError: function(message){
+        $("#error-dialog-content").html(message);
+        $('#errorpop').popup();
+        $('#errorpop').popup('open', {transition: 'pop'});
+    }        
+
+}
+
+var session= {
+    data:"",
+    load:function(){
+        session.data = JSON.parse(localStorage.getItem('session'));
+    },
+    check: function(){
+        var s = localStorage.getItem('session');
+        if(s == undefined && s != null && s != ""){            // session is found 
+            console.log('old session found');
+            session.load();
+            friends.load();
+            trips.load();
+            nav.flipPage('trips_page',false);
+            return true;
+        }else{                                      //no session is found, take use to login
+            console.log('no session found in local storage must log in');
+            nav.flipPage('login_page',false);
+            return false;
+        }
+    },
+    clear: function(){
+        window.localStorage.clear();
     }
 }
 
@@ -124,39 +96,15 @@ var nav = {
 //////////////////////////////////////////////////
 var app = {
     activePage:"",
-	"session":"",		// for session id
 	
     // Application Constructor
     initialize: function() {
         this.bindEvents();
     },
-    //create a session and store it to local storage
-    login: function() {
-        var email = $('#login_email').val();
-        var password = $('#login_password').val();
-        var cred = {"email": email,"password": password,"duration": 0};
-        
-        window.df.apis.user.login({"body":cred},
-            function(response) {  //success handler
-                window.localStorage.setItem("session",JSON.stringify(response));
-                
-                trips.getListFromDB(app.session.id);
-                friends.getListFromDB(app.session.id);
-                
-                nav.flipPage('trips_page',false);
 
-            },
-            function(response){ //error handler
-                popError(response.body.data.error[0].message);            
-            });
-    },
-    load: function(){
-        app.session = JSON.parse(localStorage.getItem('session'));
-
-    },
     update: function(){
-        trips.getListFromDB(app.session.id);
-        friends.getListFromDB(app.session.id);
+        trips.getListFromDB(session.data.id);
+        friends.getListFromDB(session.data.id);
     },
     // Bind Event Listeners
     //
@@ -174,7 +122,7 @@ var app = {
         console.log('device is ready');
         $(document).on('apiReady',function(){
             console.log('api is ready');
-            checkSession();
+            session.check();
         });
     },
     
@@ -209,6 +157,66 @@ var app = {
         }
     }
 }
+
+/////////////////////////////////////////////////
+///             ACCOUNT
+//////////////////////////////////////////////////
+var account = {
+    resetPWD: function(){
+        nav.popError('wait for it');
+    },
+    //create a session and store it to local storage
+    login: function() {
+        var email = $('#login_email').val();
+        var password = $('#login_password').val();
+        var cred = {"email": email,"password": password,"duration": 0};
+        
+        window.df.apis.user.login({"body":cred},
+            function(response) {  //success handler
+                window.localStorage.setItem("session",JSON.stringify(response));
+                
+                trips.getListFromDB(session.data.id);
+                friends.getListFromDB(session.data.id);
+                
+                nav.flipPage('trips_page',false);
+
+            },
+            function(response){ //error handler
+                nav.popError(response.body.data.error[0].message);            
+            });
+    },
+    register: function(){
+        var email = $('#register_email').val();
+        var password = $('#register_password').val();
+        var repeat_password = $('#register_repeat_password').val();
+        var fname = $('#register_first_name').val();
+        var lname = $('#register_last_name').val();
+        var newUser = {
+                "email": email,
+                "first_name": fname,
+                "last_name": lname,
+                "new_password": password
+            };  // TODO : encrypt password i.e. json_encrypt()
+
+        window.df.apis.user.register(
+            {"login":true,"body":newUser},
+            function (response){
+                    alert("Registeration worked");
+            }, function (response){
+                nav.popError(response.body.data.error[0].message);
+            }             // error handler
+        );
+    },
+    logout: function(){
+        session.clear();
+        $.mobile.pageContainer.pagecontainer('change', '#login_page', {
+            transition: 'flip',
+            changeHash: false,
+            reverse: true,
+            showLoadMsg: true
+        });
+    }
+}
 //////////////////////////////////////////////////
 //               FRIENDS
 //////////////////////////////////////////////////
@@ -229,7 +237,7 @@ var friends = {
 				window.localStorage.setItem("pending",response.record[0].pending);
 				friends.load();		
             },function (response){
-                popError("broblem, can't get your friends!");
+                nav.popError("broblem, can't get your friends!");
             });
     },
     load: function(){
