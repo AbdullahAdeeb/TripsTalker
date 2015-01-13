@@ -2,6 +2,7 @@ BUGS:
 1: When log out , the old users friends remain in the friends list 
 2: when log in, back button take you to log in>> should exit app
 3: in 'trips' page add chat button is out of the window scope.
+4: name must not have any special characters
 
 TODO:
 1: verify stored session (username/password) before login.

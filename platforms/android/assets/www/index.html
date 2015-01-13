@@ -8,6 +8,7 @@
 	<!-- <link rel="stylesheet" href="css/myTrialTheme.css"> -->
 	<link rel="stylesheet" href="css/jquery.mobile.icons-1.4.3.css">
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>  
+    <script type="text/javascript" src="PushNotification.js"></script>
      
 </head>
 <body>
@@ -24,7 +25,7 @@
                 <input type="text" name="login_email" id="login_email"> 
                 <label for="login_password">Password</label> 
                 <input type="password" name="login_password" id="login_password">
-				<button type="button" data-role="button" data-theme="b" onClick="app.login();">Login</button>
+				<button type="button" data-role="button" data-theme="b" onClick="account.login();">Login</button>
 			</form>
 			<div class="ui-grid-a">
 				<div class="ui-block-a">
@@ -43,7 +44,7 @@
 		<div data-role="content" style="padding: 15px">
 			<form id="reset_form" data-ajax="false" action="">
 				<label for="login_email">e-mail address: </label> <input type="text" name="login_email" id="login_email0">
-				<button onclick="resetPWD();" data-role="button" data-theme="b">Reset Password</button>
+				<button onclick="account.resetPWD();" data-role="button" data-theme="b">Reset Password</button>
 			</form>
 		</div>
 	</div>
@@ -66,7 +67,7 @@
                 <input type="password" name="register_repeat_password" id="register_repeat_password">
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
-						<button type="button" data-role="button" data-theme="b" onclick="register();">Register</button>
+						<button type="button" data-role="button" data-theme="b" onclick="account.register();">Register</button>
 					</div>
 					<div class="ui-block-b">
 						<a href="javascript:$.mobile.back();" type="button" data-role="button">Cancel</a>
@@ -288,10 +289,12 @@
 					<li><a href="#trips_page" data-icon="comment"  data-theme="b"  data-transition="none"> Trips</a></li>
 					<li><a href="#settings_page" data-icon="gear"  data-theme="b"  data-transition="none" class = "ui-btn-active ui-state-persist">Settings</a></li>
 				</ul> 
-            </div>   
+            </div> 
+            <h id="settings_header">...</h>
 		</div>
 		<div data-role="content" data-theme="a" style="padding: 15px">
-            <button class="ui-btn ui-shadow-icon ui-btn-b" onclick="logout();" >Log out</button>
+            
+            <button class="ui-btn ui-shadow-icon ui-btn-b" onclick="account.logout();" >Log out</button>
         </div>
 	</div>
 
@@ -336,7 +339,7 @@
     <script src="js/io.js"></script>
     <script>
         app.initialize();
-        app.onDeviceReady();
+//        testing.start();
     </script>
 
 
