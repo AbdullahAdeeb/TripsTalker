@@ -39,8 +39,6 @@ var app = {
         console.log('device is ready:'+device.platform);
         pushNotification = window.plugins.pushNotification;
         session.check();
-        push.init();
-
     },
     
     onApiReady: function(){
@@ -48,7 +46,6 @@ var app = {
         app.apiReady = true;
         //TODO: check session earlier this is taking too long on cold load
 //            session.check();
-        app.update();
     },
     
     onLoginPage: function(event,data){
@@ -80,7 +77,7 @@ var app = {
             $("#friends_list").listview('refresh');
 			console.log("friends is refreshed");
         }
-    },
+    }
 }
 
 //////////////////////////////////////////////////
@@ -119,6 +116,9 @@ var nav = {
             reverse: true,
             showLoadMsg: true
         });
+    },flipPageOnCount: function(page,track){
+        if(currentCount < triggerCount)return;
+        nav.flipPage(page,track);
     },
     popError: function(message){
         $("#error-dialog-content").html(message);
@@ -134,14 +134,17 @@ var session= {
     data:"",
     load:function(){
         session.data = JSON.parse(localStorage.getItem('session'));
+        console.log('user ID = '+session.data.id);
+        push.init();
+
     },
     check: function(){
         var s = localStorage.getItem('session');
         if(s != undefined && s != null && s != ""){ // session is found 
             console.log('old session found');
+            
             session.load();
-            friends.load();
-            trips.load();
+            
             nav.flipPage('trips_page',false);
             return true;
         }else{         //no session is found, take user to login
@@ -156,33 +159,31 @@ var session= {
 }
 
 /////////////////////////////////////////////////
-////                push Notification
+////          Push Notification
 ////////////////////////////////////////////////
 var push = {
     init: function(){
         console.log('push>> init');
-        if ( device.platform == 'android' || device.platform == 'Android'){
+        if (device.platform == 'android' || device.platform == 'Android'){
             pushNotification.register(
-            push.successHandler,
-            push.errorHandler,
-            {
-                "senderID":"557660622898",  // project ID from google api dashboard
-                "ecb":"onNotification"
-            });
-        } else if ( device.platform == 'blackberry10'){
-            pushNotification.register(
-            push.successHandler,
-            push.errorHandler,
-            {
-                invokeTargetId : "replace_with_invoke_target_id",
-                appId: "replace_with_app_id",
-                ppgUrl:"replace_with_ppg_url", //remove for BES pushes
-                ecb: "pushNotificationHandler",
-                simChangeCallback: replace_with_simChange_callback,
-                pushTransportReadyCallback: replace_with_pushTransportReady_callback,
-                launchApplicationOnPush: true
-            });
-        } else {
+              push.successHandler,
+              push.errorHandler,
+              {"senderID":"557660622898",  // project ID from google api dashboard
+              "ecb":"onNotification"}
+            );
+//        } else if ( device.platform == 'blackberry10'){
+//            pushNotification.register(
+//              push.successHandler,
+//              push.errorHandler,
+//              {invokeTargetId : "replace_with_invoke_target_id",
+//              appId: "replace_with_app_id",
+//              ppgUrl:"replace_with_ppg_url", //remove for BES pushes
+//              ecb: "onNotificationBB",
+//              simChangeCallback: replace_with_simChange_callback,
+//              pushTransportReadyCallback: replace_with_pushTransportReady_callback,
+//              launchApplicationOnPush: true
+//              });
+        } else if(device.platform == 'iOS'){
             pushNotification.register(
             tokenHandler,
             push.errorHandler,
@@ -214,12 +215,9 @@ function onNotification(e) {
     switch( e.event )
     {
     case 'registered':
-        if ( e.regid.length > 0 )
-        {
-//            $("#app-status-ul").append('<li>REGISTERED -> REGID:' + e.regid + "</li>");
-            // Your GCM push server needs to know the regID before it can push to this device
-            // here is where you might want to send it the regID for later use.
-            console.log("regID = " + e.regid);
+        if ( e.regid.length > 0 ){
+            console.log("regID = " + e.regid+"user ID = "+session.data.id);
+            registerSNS(e.regid,session.data.id);
         }
     break;
 
@@ -228,23 +226,23 @@ function onNotification(e) {
         // you might want to play a sound to get the user's attention, throw up a dialog, etc.
         if ( e.foreground )
         {
-            $("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
+//            $("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
             // on Android soundname is outside the payload.
             // On Amazon FireOS all custom attributes are contained within payload
-            var soundfile = e.soundname || e.payload.sound;
+//            var soundfile = e.soundname || e.payload.sound;
             // if the notification contains a soundname, play it.
-            var my_media = new Media("/android_asset/www/"+ soundfile);
-            my_media.play();
+//            var my_media = new Media("/android_asset/www/"+ soundfile);
+//            my_media.play();
         }
         else
         {  // otherwise we were launched because the user touched a notification in the notification tray.
             if ( e.coldstart )
             {
-                $("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+//                $("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
             }
             else
             {
-                $("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
+//                $("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
             }
         }
 
@@ -266,7 +264,7 @@ function onNotification(e) {
 }
 
 // BlackBerry10
-function pushNotificationHandler(pushpayload) {
+function onNotificationBB(pushpayload) {
     var contentType = pushpayload.headers["Content-Type"],
         id = pushpayload.id,
         data = pushpayload.data;//blob
@@ -314,20 +312,29 @@ var account = {
         var email = $('#login_email').val();
         var password = $('#login_password').val();
         var cred = {"email": email,"password": password,"duration": 0};
-        
-        window.df.apis.user.login({"body":cred},
-            function(response) {  //success handler
-                window.localStorage.setItem("session",JSON.stringify(response));
-                
-                trips.getListFromDB(session.data.id);
-                friends.getListFromDB(session.data.id);
-                
-                nav.flipPage('trips_page',false);
+        // make sure the api is ready before making any api call
+        if(app.apiReady){
+            window.df.apis.user.login({"body":cred},
+                function(response) {  //success handler
+                    window.localStorage.setItem("session",JSON.stringify(response));
+                    trips.getListFromDB(response.id);
+                    friends.getListFromDB(response.id);
+                    session.load();
 
-            },
-            function(response){ //error handler
-                nav.popError(response.body.data.error[0].message);            
-            });
+                    nav.flipPage('trips_page',false);
+
+                },
+                function(response){ //error handler
+                    nav.popError(response.body.data.error[0].message);            
+                });
+        }else{ //if api is not ready then only call this method when it is ready (won't recurse)
+            console.log('waiting for apiReady');
+            app.onApiReady = function(){
+                console.log('finally apiReady');
+                app.apiReady = true;
+                account.login();
+            }
+        }
     },
     register: function(){
         var email = $('#register_email').val();
@@ -341,15 +348,23 @@ var account = {
                 "last_name": lname,
                 "new_password": password
             };  // TODO : encrypt password i.e. json_encrypt()
-
-        window.df.apis.user.register(
-            {"login":true,"body":newUser},
-            function (response){
-                    alert("Registeration worked");
-            }, function (response){
-                nav.popError(response.body.data.error[0].message);
-            }             // error handler
-        );
+        if(app.apiReady){
+            window.df.apis.user.register(
+                {"login":true,"body":newUser},
+                function (response){
+                        alert("Registeration worked");
+                }, function (response){
+                    nav.popError(response.body.data.error[0].message);
+                }             // error handler
+            );
+        }else{ //if api is not ready then only call this method when it is ready (won't recurse)
+            console.log('waiting for apiReady');
+            app.onApiReady = function(){
+                console.log('finally apiReady');
+                app.apiReady = true;
+                account.register();
+            }
+        }
     },
     logout: function(){
         session.clear();
@@ -379,7 +394,7 @@ var friends = {
 				window.localStorage.setItem("friends",response.record[0].friends);
 				window.localStorage.setItem("requests",response.record[0].requests);
 				window.localStorage.setItem("pending",response.record[0].pending);
-				friends.load();		
+                friends.load();
             },function (response){
                 nav.popError("broblem, can't get your friends!");
             });
@@ -438,6 +453,7 @@ var trips = {
         //on success
 //        window.localStorage.setItem('trips',JSON.stringify([{'id':''}]));
 //        trips.load();
+
     },
     updateUI: function(){
         if(trips.list == null){
