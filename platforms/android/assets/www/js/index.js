@@ -4,15 +4,16 @@
 var testing = {
     start:function(){
         console.log("TESTING MODE ON");
-        window.plugins = '';
-        window.plugins.pushNotification = '';
+        window.plugins = {};
+        window.plugins.pushNotification = {};
+        device = {platform : 'Android'};
         app.onDeviceReady();
     }
 }
 
 var app = {
     activePage:"",
-	apiReady: false,
+    apiReady: false,
     // Application Constructor
     initialize: function() {
         this.bindEvents();
@@ -34,39 +35,41 @@ var app = {
         $(document).on("pagecontainerbeforeshow", this.onBeforeShow);        
         $(document).on('apiReady',this.onApiReady);
     },    
-        
+
     onDeviceReady: function() {
         console.log('device is ready:'+device.platform);
         pushNotification = window.plugins.pushNotification;
+        document.addEventListener("backbutton", nav.backButtonHandler, false);
         session.check();
     },
-    
+
     onApiReady: function(){
         console.log('api is ready');
         app.apiReady = true;
         //TODO: check session earlier this is taking too long on cold load
-//            session.check();
+        //            session.check();
     },
-    
+
     onLoginPage: function(event,data){
         console.log('login page created');
-        
+
     },
-    
+
     onTripPage: function(event,ui) {
-            console.log('trip-page init');
-            $( document ).on( "swipeleft swiperight", "#trip_page", function( e ) {
-                // We check if there is no open panel on the page because otherwise
-                // a swipe to close the left panel would also open the right panel (and v.v.).
-                // We do this by checking the data that the framework stores on the page element (panel: open).
-                if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
-                    if ( e.type === "swipeleft"  ) {
-                        $( "#trip_panel" ).panel( "open" );
-                    } else if ( e.type === "swiperight" ) {
-                        $( "#no_panel" ).panel( "open" );
-                    }
+        console.log('trip-page init');
+        $( document ).on( "swipeleft swiperight", "#trip_page", function( e ) {
+            // We check if there is no open panel on the page because otherwise
+            // a swipe to close the left panel would also open the right panel (and v.v.).
+            // We do this by checking the data that the framework stores on the page element (panel: open).
+            if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+                if ( e.type === "swipeleft"  ) {
+                    $( "#trip_panel" ).panel( "open" );
+                } else if ( e.type === "swiperight" ) {
+                    $( "#no_panel" ).panel( "open" );
                 }
-            });
+            }
+        });
+        
     },
     onBeforeShow: function(event,ui){
         app.activePage = $.mobile.pageContainer.pagecontainer("getActivePage")[0].id;
@@ -75,7 +78,7 @@ var app = {
             $("#trips_list").listview('refresh');
         }else if(app.activePage == "friends_page") {
             $("#friends_list").listview('refresh');
-			console.log("friends is refreshed");
+            console.log("friends is refreshed");
         }
     }
 }
@@ -90,7 +93,7 @@ var nav = {
             changeHash: track,
             reverse: false,
             showLoadMsg: true
-            });
+        });
     },
 
     slideUp: function(page,track){
@@ -102,13 +105,22 @@ var nav = {
         });
     },
     
+    flow: function(page,reverse){
+        $.mobile.pageContainer.pagecontainer('change', '#'+page, {
+            transition: 'flow',
+            changeHash: false,
+            reverse: reverse,
+            showLoadMsg: true
+        });
+    },
+
     goTo: function(page,track){
         if(app.activePage == page){
             return;
         }
         $.mobile.pageContainer.pagecontainer('change', '#'+page, {changeHash: track});
     },
-    
+
     flipPage: function(page,track){
         $.mobile.pageContainer.pagecontainer('change', '#'+page, {
             transition: 'flip',
@@ -116,10 +128,28 @@ var nav = {
             reverse: true,
             showLoadMsg: true
         });
-    },flipPageOnCount: function(page,track){
+    },
+        
+    flipPageOnCount: function(page,track){
         if(currentCount < triggerCount)return;
         nav.flipPage(page,track);
     },
+    
+    backButtonHandler: function(){
+        if(app.activePage == "trip_page"){
+            nav.flow("trips_page",true);
+        
+        }else if(app.activePage == "trips_page" ){
+            navigator.app.exitApp();
+        
+        }else if(app.activePage == "newtrip_page"){
+            nav.slideUp("trips_page",false);
+        
+        }else{
+            nav.goTo("trips_page",false);
+        }
+    },
+    
     popError: function(message){
         $("#error-dialog-content").html(message);
         $('#errorpop').popup();
@@ -136,16 +166,16 @@ var session= {
         session.data = JSON.parse(localStorage.getItem('session'));
         console.log('user ID = '+session.data.id);
         push.init();
+        friends.load();
+        trips.load();
+        nav.flipPage('trips_page',false);
 
     },
     check: function(){
         var s = localStorage.getItem('session');
         if(s != undefined && s != null && s != ""){ // session is found 
             console.log('old session found');
-            
             session.load();
-            
-            nav.flipPage('trips_page',false);
             return true;
         }else{         //no session is found, take user to login
             console.log('no session found in local storage must log in');
@@ -165,34 +195,38 @@ var push = {
     init: function(){
         console.log('push>> init');
         if (device.platform == 'android' || device.platform == 'Android'){
+            if(pushNotification == undefined){
+                console.log("pushNotification is underfined index.js:169");
+                return;
+            }
             pushNotification.register(
-              push.successHandler,
-              push.errorHandler,
-              {"senderID":"557660622898",  // project ID from google api dashboard
-              "ecb":"onNotification"}
+                push.successHandler,
+                push.errorHandler,
+                {"senderID":"557660622898",  // project ID from google api dashboard
+                 "ecb":"onNotification"}
             );
-//        } else if ( device.platform == 'blackberry10'){
-//            pushNotification.register(
-//              push.successHandler,
-//              push.errorHandler,
-//              {invokeTargetId : "replace_with_invoke_target_id",
-//              appId: "replace_with_app_id",
-//              ppgUrl:"replace_with_ppg_url", //remove for BES pushes
-//              ecb: "onNotificationBB",
-//              simChangeCallback: replace_with_simChange_callback,
-//              pushTransportReadyCallback: replace_with_pushTransportReady_callback,
-//              launchApplicationOnPush: true
-//              });
+            //        } else if ( device.platform == 'blackberry10'){
+            //            pushNotification.register(
+            //              push.successHandler,
+            //              push.errorHandler,
+            //              {invokeTargetId : "replace_with_invoke_target_id",
+            //              appId: "replace_with_app_id",
+            //              ppgUrl:"replace_with_ppg_url", //remove for BES pushes
+            //              ecb: "onNotificationBB",
+            //              simChangeCallback: replace_with_simChange_callback,
+            //              pushTransportReadyCallback: replace_with_pushTransportReady_callback,
+            //              launchApplicationOnPush: true
+            //              });
         } else if(device.platform == 'iOS'){
             pushNotification.register(
-            tokenHandler,
-            push.errorHandler,
-            {
-                "badge":"true",
-                "sound":"true",
-                "alert":"true",
-                "ecb":"onNotificationAPN"
-            });
+                tokenHandler,
+                push.errorHandler,
+                {
+                    "badge":"true",
+                    "sound":"true",
+                    "alert":"true",
+                    "ecb":"onNotificationAPN"
+                });
         }
     },
     successHandler: function(result){
@@ -210,57 +244,57 @@ var push = {
 
 // Android and Amazon Fire OS
 function onNotification(e) {
-//    $("#app-status-ul").append('<li>EVENT -> RECEIVED:' + e.event + '</li>');
+    //    $("#app-status-ul").append('<li>EVENT -> RECEIVED:' + e.event + '</li>');
     console.log('event= '+e.event);
     switch( e.event )
     {
-    case 'registered':
-        if ( e.regid.length > 0 ){
-            console.log("regID = " + e.regid+"user ID = "+session.data.id);
-            registerSNS(e.regid,session.data.id);
-        }
-    break;
+        case 'registered':
+            if ( e.regid.length > 0 ){
+                console.log("regID = " + e.regid+"user ID = "+session.data.id);
+                socket.registerSNS(e.regid,session.data.id);
+            }
+            break;
 
-    case 'message':
-        // if this flag is set, this notification happened while we were in the foreground.
-        // you might want to play a sound to get the user's attention, throw up a dialog, etc.
-        if ( e.foreground )
-        {
-//            $("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
-            // on Android soundname is outside the payload.
-            // On Amazon FireOS all custom attributes are contained within payload
-//            var soundfile = e.soundname || e.payload.sound;
-            // if the notification contains a soundname, play it.
-//            var my_media = new Media("/android_asset/www/"+ soundfile);
-//            my_media.play();
-        }
-        else
-        {  // otherwise we were launched because the user touched a notification in the notification tray.
-            if ( e.coldstart )
+        case 'message':
+            // if this flag is set, this notification happened while we were in the foreground.
+            // you might want to play a sound to get the user's attention, throw up a dialog, etc.
+            if ( e.foreground )
             {
-//                $("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+                //            $("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
+                // on Android soundname is outside the payload.
+                // On Amazon FireOS all custom attributes are contained within payload
+                //            var soundfile = e.soundname || e.payload.sound;
+                // if the notification contains a soundname, play it.
+                //            var my_media = new Media("/android_asset/www/"+ soundfile);
+                //            my_media.play();
             }
             else
-            {
-//                $("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
+            {  // otherwise we were launched because the user touched a notification in the notification tray.
+                if ( e.coldstart )
+                {
+                    //                $("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+                }
+                else
+                {
+                    //                $("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
+                }
             }
-        }
 
-//       $("#app-status-ul").append('<li>MESSAGE -> MSG: ' + e.payload.message + '</li>');
-//           //Only works for GCM
-//       $("#app-status-ul").append('<li>MESSAGE -> MSGCNT: ' + e.payload.msgcnt + '</li>');
-//       //Only works on Amazon Fire OS
-//       $status.append('<li>MESSAGE -> TIME: ' + e.payload.timeStamp + '</li>');
-    break;
+            //       $("#app-status-ul").append('<li>MESSAGE -> MSG: ' + e.payload.message + '</li>');
+            //           //Only works for GCM
+            //       $("#app-status-ul").append('<li>MESSAGE -> MSGCNT: ' + e.payload.msgcnt + '</li>');
+            //       //Only works on Amazon Fire OS
+            //       $status.append('<li>MESSAGE -> TIME: ' + e.payload.timeStamp + '</li>');
+            break;
 
-    case 'error':
-//        $("#app-status-ul").append('<li>ERROR -> MSG:' + e.msg + '</li>');
-    break;
+        case 'error':
+            //        $("#app-status-ul").append('<li>ERROR -> MSG:' + e.msg + '</li>');
+            break;
 
-    default:
-//        $("#app-status-ul").append('<li>EVENT -> Unknown, an event was received and we do not know what it is</li>');
-    break;
-  }
+        default:
+            //        $("#app-status-ul").append('<li>EVENT -> Unknown, an event was received and we do not know what it is</li>');
+            break;
+    }
 }
 
 // BlackBerry10
@@ -315,18 +349,18 @@ var account = {
         // make sure the api is ready before making any api call
         if(app.apiReady){
             window.df.apis.user.login({"body":cred},
-                function(response) {  //success handler
-                    window.localStorage.setItem("session",JSON.stringify(response));
-                    trips.getListFromDB(response.id);
-                    friends.getListFromDB(response.id);
-                    session.load();
+                                      function(response) {  //success handler
+                window.localStorage.setItem("session",JSON.stringify(response));
+                trips.getListFromDB(response.id);
+                friends.getListFromDB(response.id);
+                session.load();
 
-                    nav.flipPage('trips_page',false);
+                nav.flipPage('trips_page',false);
 
-                },
-                function(response){ //error handler
-                    nav.popError(response.body.data.error[0].message);            
-                });
+            },
+                                      function(response){ //error handler
+                nav.popError(response.body.data.error[0].message);            
+            });
         }else{ //if api is not ready then only call this method when it is ready (won't recurse)
             console.log('waiting for apiReady');
             app.onApiReady = function(){
@@ -343,16 +377,16 @@ var account = {
         var fname = $('#register_first_name').val();
         var lname = $('#register_last_name').val();
         var newUser = {
-                "email": email,
-                "first_name": fname,
-                "last_name": lname,
-                "new_password": password
-            };  // TODO : encrypt password i.e. json_encrypt()
+            "email": email,
+            "first_name": fname,
+            "last_name": lname,
+            "new_password": password
+        };  // TODO : encrypt password i.e. json_encrypt()
         if(app.apiReady){
             window.df.apis.user.register(
                 {"login":true,"body":newUser},
                 function (response){
-                        alert("Registeration worked");
+                    alert("Registeration worked");
                 }, function (response){
                     nav.popError(response.body.data.error[0].message);
                 }             // error handler
@@ -384,20 +418,20 @@ var friends = {
     pending:[],
     requests:[],
     //  GET FRIENDS LIST FUCNTIO
-    
+
     // get data from DB -> local storage THEN onSuccess call friends.load()
     getListFromDB: function(id){
-		window.df.apis.db.getRecordsByIds({"table_name":"ttfriends", "ids":id}, 
-			function (response) {
-				console.log ('we are getting friends!!');
-				console.log(response.record[0].friends);
-				window.localStorage.setItem("friends",response.record[0].friends);
-				window.localStorage.setItem("requests",response.record[0].requests);
-				window.localStorage.setItem("pending",response.record[0].pending);
-                friends.load();
-            },function (response){
-                nav.popError("broblem, can't get your friends!");
-            });
+        window.df.apis.db.getRecordsByIds({"table_name":"friends", "ids":id}, 
+                                          function (response) {
+            console.log ('we are getting friends!!');
+            console.log(response.record[0].friends);
+            window.localStorage.setItem("friends",response.record[0].friends);
+            window.localStorage.setItem("requests",response.record[0].requests);
+            window.localStorage.setItem("pending",response.record[0].pending);
+            friends.load();
+        },function (response){
+            nav.popError("broblem, can't get your friends!");
+        });
     },
     load: function(){
         friends.list = window.localStorage.getItem("friends").split(";").sort();
@@ -414,12 +448,12 @@ var friends = {
 
         }
         $('#friends_list').html(list); 
-        
+
         if(app.activePage == "friends_page"){
             $("#friends_list").listview("refresh");
         }
         // TWO MORE LOOPS FOR PENDING AND REQUESTS
-        
+
     }
 
 }
@@ -430,31 +464,46 @@ var friends = {
 var trips = {
     list: [],
     new: function(){
-        var name = $(trip_name).val();
-        var loc = $(trip_location).val();
-        var id = 212; //get this from socket.io
-        
-        trips.list.push({id:'first',name: name,participants:'',location:loc});
-        window.localStorage.setItem('trips',JSON.stringify(trips.list));
-//        $('#trips_list').append('<li><a href=javascript:trips.open(\''+name+'\');><img src="img/ants.png"></img><h1>'+name+'</h1><p>'+loc+'</p></a></li>');
-        trips.updateUI();
-        nav.goTo('trips_page',false);
-        
+        var room = {"name": $(trip_name).val(),"admin": session.data.id,"loc": $(trip_location).val(),"members":[2,5,6]};
+
+        //        var room = socket.createRoom(data);
+
+        if (room.name === '') return;
+
+        window.df.apis.mongo.createRecords({"table_name":"rooms", "body":{"record":[room]}}, function(response){
+            console.log(JSON.stringify(response));
+            room.id = response.record._id;
+            window.localStorage.setItem('trips',JSON.stringify(trips.list));
+            trips.load();
+            nav.goTo('trips_page',false);
+        }, function(error){
+            console.log(JSON.stringify(error));
+            nav.popError('The server refused to create an event :(');
+        });
     },
+
     load: function(){
         trips.list = JSON.parse(window.localStorage.getItem('trips'));
         trips.updateUI();
     },
-    addToDB: function(){
-    
-    },
+
     getListFromDB: function(){
-
+        window.df.apis.mongo.getRecords({"table_name":"rooms",
+            "body":{$or: [{"admin": session.data.id},{"members":session.data.id}]}
+        },function(response){
+            console.log('got trips from mongo');
+            window.localStorage.setItem('trips',JSON.stringify(response.record));
+            trips.load();
+        },function(error){
+            console.log(JSON.stringify(error));
+            nav.popError('Couldt get your events from the server :(');
+        });
         //on success
-//        window.localStorage.setItem('trips',JSON.stringify([{'id':''}]));
-//        trips.load();
+        //        window.localStorage.setItem('trips',JSON.stringify([{'id':''}]));
+        //        trips.load();
 
     },
+
     updateUI: function(){
         if(trips.list == null){
             $('#trips_list').html('');
@@ -465,7 +514,7 @@ var trips = {
             html += '<li><a href=javascript:trips.open(\''+trips.list[i].name+'\');><img src="img/ants.png"></img><h1>'+trips.list[i].name+'</h1><p>'+trips.list[i].loc+'</p></a></li>';
         }
         $('#trips_list').html(html);
-        
+
         if(app.activePage == "trips_page"){
             $("#trips_list").listview("refresh");
         }
@@ -473,9 +522,9 @@ var trips = {
     open: function(name){
         $("#trip_page_header").html(name);
         nav.goTo("trip_page",true);
-        
+
     }
-    
-    
+
+
 }
 

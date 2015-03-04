@@ -1,10 +1,22 @@
-var socket = io('http://ec2-54-175-73-150.compute-1.amazonaws.com:3000');
+var socket = io('http://52.0.36.197:3000');
 
 
-function registerSNS(pushID, userID){
+socket.registerSNS = function(pushID, userID){
     socket.emit('registerSNS', pushID+';'+userID);
     console.log('registerSNS >> '+pushID+';'+userID);
 }
+
+
+//socket.createRoom = function(data){
+////    info is json that must contain {name: String, admin: int,details:[]}
+//    socket.emit('createRoom',JSON.stringify(data));
+//    console.log('io createRoom >> '+JSON.stringify(data));
+//    socket.on('roomCreated',function(room){
+//        trips.list.push(room);
+//        window.localStorage.setItem('trips',JSON.stringify(trips.list));
+//        trips.updateUI();
+//    });
+//}
 
 $('#msg_form').submit(function(){
     socket.emit('chat message', $('#msg').val());
