@@ -421,24 +421,24 @@ var friends = {
 
     // get data from DB -> local storage THEN onSuccess call friends.load()
     getListFromDB: function(id){
-        window.df.apis.db.getRecordsByIds({"table_name":"friends", "ids":id}, 
-                                          function (response) {
-            console.log ('we are getting friends!!');
-            console.log(response.record[0].friends);
-            window.localStorage.setItem("friends",response.record[0].friends);
-            window.localStorage.setItem("requests",response.record[0].requests);
-            window.localStorage.setItem("pending",response.record[0].pending);
-            friends.load();
-        },function (response){
-            nav.popError("broblem, can't get your friends!");
-        });
+//        window.df.apis.db.getRecordsByIds({"table_name":"friends", "ids":id}, 
+//                                          function (response) {
+//            console.log ('we are getting friends!!');
+//            console.log(response.record[0].friends);
+//            window.localStorage.setItem("friends",response.record[0].friends);
+//            window.localStorage.setItem("requests",response.record[0].requests);
+//            window.localStorage.setItem("pending",response.record[0].pending);
+//            friends.load();
+//        },function (response){
+//            nav.popError("broblem, can't get your friends!");
+//        });
     },
     load: function(){
-        friends.list = window.localStorage.getItem("friends").split(";").sort();
-        friends.requests = window.localStorage.getItem("requests").split(";");
-        friends.pending = window.localStorage.getItem("pending").split(";");
-
-        friends.updateUI();
+//        friends.list = window.localStorage.getItem("friends").split(";").sort();
+//        friends.requests = window.localStorage.getItem("requests").split(";");
+//        friends.pending = window.localStorage.getItem("pending").split(";");
+//
+//        friends.updateUI();
     },
     updateUI: function(){
         var list="";

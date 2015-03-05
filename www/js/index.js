@@ -421,24 +421,24 @@ var friends = {
 
     // get data from DB -> local storage THEN onSuccess call friends.load()
     getListFromDB: function(id){
-        window.df.apis.db.getRecordsByIds({"table_name":"friends", "ids":id}, 
-                                          function (response) {
-            console.log ('we are getting friends!!');
-            console.log(response.record[0].friends);
-            window.localStorage.setItem("friends",response.record[0].friends);
-            window.localStorage.setItem("requests",response.record[0].requests);
-            window.localStorage.setItem("pending",response.record[0].pending);
-            friends.load();
-        },function (response){
-            nav.popError("broblem, can't get your friends!");
-        });
+//        window.df.apis.db.getRecordsByIds({"table_name":"friends", "ids":id}, 
+//                                          function (response) {
+//            console.log ('we are getting friends!!');
+//            console.log(response.record[0].friends);
+//            window.localStorage.setItem("friends",response.record[0].friends);
+//            window.localStorage.setItem("requests",response.record[0].requests);
+//            window.localStorage.setItem("pending",response.record[0].pending);
+//            friends.load();
+//        },function (response){
+//            nav.popError("broblem, can't get your friends!");
+//        });
     },
     load: function(){
-        friends.list = window.localStorage.getItem("friends").split(";").sort();
-        friends.requests = window.localStorage.getItem("requests").split(";");
-        friends.pending = window.localStorage.getItem("pending").split(";");
-
-        friends.updateUI();
+//        friends.list = window.localStorage.getItem("friends").split(";").sort();
+//        friends.requests = window.localStorage.getItem("requests").split(";");
+//        friends.pending = window.localStorage.getItem("pending").split(";");
+//
+//        friends.updateUI();
     },
     updateUI: function(){
         var list="";
@@ -464,7 +464,7 @@ var friends = {
 var trips = {
     list: [],
     new: function(){
-        var room = {"name": $(trip_name).val(),"admin": session.data.id,"loc": $(trip_location).val(),"members":[2,5,6]};
+        var room = {"name": $(trip_name).val(),"admin": session.data.id,"loc": $(trip_location).val(),"members":[2,5,6],"connected":[],"disconnected":[]};
 
         //        var room = socket.createRoom(data);
 
@@ -488,8 +488,9 @@ var trips = {
     },
 
     getListFromDB: function(){
-        window.df.apis.mongo.getRecords({"table_name":"rooms",
-            "body":{$or: [{"admin": session.data.id},{"members":session.data.id}]}
+        window.df.apis.mongo.getRecords({"table_name":"rooms",                
+            "body":{$or: [{"admin": session.data.id},{"members":session.data.id}]}  // the nosql query
+                                         
         },function(response){
             console.log('got trips from mongo');
             window.localStorage.setItem('trips',JSON.stringify(response.record));
@@ -519,6 +520,7 @@ var trips = {
             $("#trips_list").listview("refresh");
         }
     },
+    
     open: function(name){
         $("#trip_page_header").html(name);
         nav.goTo("trip_page",true);
