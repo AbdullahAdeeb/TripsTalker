@@ -12,9 +12,9 @@ socket.registerSNS = function(pushID, userID){
 //    socket.emit('createRoom',JSON.stringify(data));
 //    console.log('io createRoom >> '+JSON.stringify(data));
 //    socket.on('roomCreated',function(room){
-//        trips.list.push(room);
-//        window.localStorage.setItem('trips',JSON.stringify(trips.list));
-//        trips.updateUI();
+//        events.list.push(room);
+//        window.localStorage.setItem('events',JSON.stringify(events.list));
+//        events.updateUI();
 //    });
 //}
 
