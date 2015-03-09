@@ -10,24 +10,30 @@ var friends = {
     // return true on success; and calls friends.updateUI()
     // return false on error
     getListFromDB: function(id){
+        console.log('friends.getListFromDB');
         var query = {'member': session.data.id};  // the nosql query
         window.df.apis.mongo.getRecords({"table_name":"friends","body": query},function(response){
             // on success
+            $.mobile.loading("show");
             console.log('got friends from mongo');
             window.localStorage.setItem('friends',JSON.stringify(response.record[0].friends));
             window.localStorage.setItem('requests',JSON.stringify(response.record[0].requests));
             friends.updateUI();
+            $.mobile.loading("hide");
+
             return true;
         },function(error){
             // on error
+            $.mobile.loading("hide");
             console.log(JSON.stringify(error));
             nav.popError('Couldt get your friends from the server :(');
             return false;
         });
     }, 
-    
+
     // updateUI function will load the data from localStorage to UI
     updateUI: function(){
+        console.log('friends.updateUI');
         friends.list = JSON.parse(window.localStorage.getItem('friends'));
         friends.requests = JSON.parse(window.localStorage.getItem('requests'));
         // load friends list to UI

@@ -6,7 +6,7 @@ var push = {
         console.log('push>> init');
         if (device.platform == 'android' || device.platform == 'Android'){
             if(pushNotification == undefined){
-                console.log("pushNotification is underfined index.js:169");
+                console.log("pushNotification is underfined push.js:9 \n create proper handler for this.");
                 return;
             }
             pushNotification.register(
@@ -37,6 +37,9 @@ var push = {
                     "alert":"true",
                     "ecb":"onNotificationAPN"
                 });
+        }else {
+            // This is a browser
+            
         }
     },
     successHandler: function(result){

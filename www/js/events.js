@@ -27,15 +27,19 @@ var events = {
     // return true on success; and calls events.updateUI()
     // return false on error
     getListFromDB: function(){
-        var query = {$or: [{"admin": session.data.id},{"members":session.data.id}]};  // the nosql query
+        $.mobile.loading("show");
+        console.log('events.getlistfromDB');
+        var query = {$or: [{"admin": session.data.id},{"members": {$in:[session.data.id]}}]};  // the nosql query
         window.df.apis.mongo.getRecords({"table_name":"rooms","body": query},function(response){
             // on success
-            console.log('got events from mongo');
+            console.log('respones:'+JSON.stringify(response.record));
             window.localStorage.setItem('events',JSON.stringify(response.record));
             events.updateUI();
+            $.mobile.loading("hide");
             return true;
         },function(error){
             // on error
+            $.mobile.loading("hide");
             console.log(JSON.stringify(error));
             nav.popError('Couldt get your events from the server :(');
             return false;
@@ -48,6 +52,7 @@ var events = {
 
     // updateUI function will load the data from localStorage to UI
     updateUI: function(){
+        console.log('events.updateUI');
         events.list = JSON.parse(window.localStorage.getItem('events'));
         if(events.list == null){
             $('#events_list').html('');

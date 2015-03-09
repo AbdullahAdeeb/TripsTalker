@@ -92,8 +92,8 @@ var app = {
 var session= {
     data:"",
     load:function(){
-        console.log('session.load>> user ID = '+session.data.id);
         session.data = JSON.parse(localStorage.getItem('session'));
+        console.log('session.load>> user ID = '+session.data.id);
     },
     check: function(){
         var s = localStorage.getItem('session');
@@ -138,10 +138,10 @@ var account = {
                 window.localStorage.setItem("session",JSON.stringify(response));
                 nav.flipPage('events_page',false);
                 push.init();
-                session.load(); // will load from localStorage the session,events, and friends 
-                events.getListFromDB(response.id);
-                friends.getListFromDB(response.id);
-                $.mobile.loading("hide");
+                session.load(); // will load from localStorage the session 
+                if(events.getListFromDB(response.id) && friends.getListFromDB(response.id)){
+                    $.mobile.loading("hide");
+                }
             }, function(response){
                 $.mobile.loading("hide");
                 //error handler
