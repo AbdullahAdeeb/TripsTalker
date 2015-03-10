@@ -15,7 +15,7 @@ var events = {
             console.log(JSON.stringify(response));
             room.id = response.record._id;
             window.localStorage.setItem('events',JSON.stringify(events.list));
-            events.load();
+            events.updateUI();
             nav.goTo('events_page',false);
         }, function(error){
             console.log(JSON.stringify(error));
@@ -30,8 +30,7 @@ var events = {
         $.mobile.loading("show");
         console.log('events.getlistfromDB');
         var query = {$or: [{"admin": session.data.id},{"members": {$in:[session.data.id]}}]};  // the nosql query
-        
-        window.df.apis.mongo.getRecords({"table_name":"rooms","body":{ "filter": query},function(response){
+        window.df.apis.mongo.getRecords({"table_name":"rooms","body": query},function(response){
             // on success
             console.log('respones:'+JSON.stringify(response.record));
             window.localStorage.setItem('events',JSON.stringify(response.record));
@@ -61,9 +60,9 @@ var events = {
         }
         var html = "";
         for(i=0;i<events.list.length;i++){
-            html += '<li><a href=javascript:events.open(\''+events.list[i].name+'\');><img src="img/ants.png"></img><h1>'+events.list[i].name+'</h1><p>'+events.list[i].loc+'</p></a></li>';
+            html += "<li><a href=javascript:events.open();><img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p></a></li>";
         }
-        $('#events_list').html(html);
+        $("#events_list").html(html);
 
         // refresh will happen when a page is opened, 
         // if the page is already open a manual refresh below will be preformed 
@@ -73,8 +72,9 @@ var events = {
 
     },
 
-    open: function(name){
-        $("#event_page_header").html(name);
+    open: function(){
+        console.log("opening an event");
+        $("#event_page_header").html('name');
         nav.goTo("event_page",true);
 
     }
