@@ -44,3 +44,5 @@ Temporary Items
 
 *.prop
 platforms/
+platforms/android/assets/www/js/events.js
+platforms/android/ant-build/build.prop
