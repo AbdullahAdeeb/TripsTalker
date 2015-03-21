@@ -160,21 +160,28 @@ testing
                     <input type="text" name="msg" id="msg">
                     <button onclick="io.to('54f275828c632b65478b4568').emit('chat message',{msg:'this is my message u asshole'});">Send</button>
                 </form>
-					<button class="ui-btn ui-shadow-icon ui-btn-b" onclick="nav.goTo('addfriends',false);" >Add me some friends</button>
+					<button class="ui-btn ui-shadow-icon ui-btn-b" onclick="nav.goTo('add_member',false);" >Add me some friends</button>
             </div>
         </div>
 
 		<!------------------------------------------------------------------------>
-        <!---------------------------ADD FRIENDS TO TRIP---------------------------------->
+        <!---------------------------ADD MEMEBERS TO AN EVENT---------------------------------->
         <!------------------------------------------------------------------------>
-        <div data-role="page" id="addfriends">
+        <div data-role="page" id="add_member">
                 <div data-role="header" class="ui-header ui-bar-b">
-                      <h1>No friends :(</h1>
-
+              
+					<input placeholder="Search Friends..." data-type="search" class="ui-input-text ui-body-a" autofocus="autofocus">
+					
+					
             </div>
-            <div data-role="content">
-                <p> 6eez</p>
+             <!--Content-->
+            <div data-role="content" style="padding: 15px">
 
+                <!-- <a href="#friends_panel" data-icon="bars" class="ui-btn-right">Requests</a> -->
+
+                <ul data-role="listview" id= "memebers_list" type = "a" data-autodividers="true" >
+
+                </ul>
             </div>
         </div>
 		
