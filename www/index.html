@@ -158,7 +158,7 @@ testing
                 </div>
                 <form action="" id="msg_form">
                     <input type="text" name="msg" id="msg">
-                    <button>Send</button>
+                    <button onclick="io.to('54f275828c632b65478b4568').emit('chat message',{msg:'this is my message u asshole'});">Send</button>
                 </form>
 					<button class="ui-btn ui-shadow-icon ui-btn-b" onclick="nav.goTo('addfriends',false);" >Add me some friends</button>
             </div>
