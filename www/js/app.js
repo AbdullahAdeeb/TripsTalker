@@ -59,15 +59,16 @@ var app = {
 	
 	onAddMemberPage: function() {
 		console.log('Adding members to event')
-		friends.list = JSON.parse(window.localStorage.getItem('friends'));
+		//members.list = JSON.parse(window.localStorage.getItem('friends'));
 		
-		var list="";
-        for( var i =  0 ; i < friends.list.length ; i++){
+		
+		/* console.log('list created')
+        for( var i =  0 ; i < members.list.length ; i++){
             //Add the friends as an li into friends list ul
-            list += ('<li><img src="img/ants.png"></img><h1>'+friends.list[i].name+'</h1></li>');
+            list += ('<li><img src="img/ants.png"></img><h1>'+members.list[i].name+'</h1></li>');
 
         }
-        $('#members_list').html(list); 
+        $('#members_list').html(list); */ 
 	},
 
     oneventPage: function(event,ui) {
@@ -153,12 +154,14 @@ var account = {
                 nav.flipPage('events_page',false);
                 push.init();
                 session.load(); // will load from localStorage the session 
-                //if(events.getListFromDB(response.id) && friends.getListFromDB(response.id)){
+               
+			   //if(events.getListFromDB(response.id) && friends.getListFromDB(response.id)){
                   //  $.mobile.loading("hide");
                 //}
 				
 				events.getListFromDB(response.id);
 				friends.getListFromDB(response.id);
+				
             }, function(response){
                 $.mobile.loading("hide");
                 //error handler
