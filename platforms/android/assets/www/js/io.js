@@ -2,8 +2,8 @@ var socket = io('http://52.0.36.197:3000');
 
 
 socket.registerSNS = function(pushID, userID){
-    socket.emit('register', pushID+';'+userID);
-    console.log('register >> '+pushID+';'+userID);
+    socket.emit('registerSNS', pushID+';'+userID);
+    console.log('registerSNS >> '+pushID+';'+userID);
 }
 
 
