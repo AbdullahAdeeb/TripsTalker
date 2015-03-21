@@ -64,8 +64,7 @@ function onNotification(e) {
     {
         case 'registered':
             if ( e.regid.length > 0 ){
-                console.log("regID = " + e.regid+"user ID = "+session.data.id);
-                socket.registerSNS(e.regid,session.data.id);
+                socket.register(e.regid,session.data.id);
             }
             break;
 
@@ -74,6 +73,7 @@ function onNotification(e) {
             // you might want to play a sound to get the user's attention, throw up a dialog, etc.
             if ( e.foreground )
             {
+                console.log(e.payload.message);
                 //            $("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
                 // on Android soundname is outside the payload.
                 // On Amazon FireOS all custom attributes are contained within payload

@@ -139,12 +139,18 @@ var account = {
                 nav.flipPage('events_page',false);
                 push.init();
                 session.load(); // will load from localStorage the session 
+<<<<<<< HEAD
                // if(events.getListFromDB(response.id) && friends.getListFromDB(response.id)){
                   //  $.mobile.loading("hide");
                 //}
 				events.getListFromDB(response.id);
 				friends.getListFromDB(response.id);
 				
+=======
+                events.getListFromDB(response.id);
+                friends.getListFromDB(response.id);
+                
+>>>>>>> origin/master
             }, function(response){
                 $.mobile.loading("hide");
                 //error handler
