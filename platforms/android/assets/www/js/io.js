@@ -19,8 +19,10 @@ socket.registerSNS = function(pushID, userID){
 //}
 
 $('#msg_form').submit(function(){
-    socket.emit('chat message', $('#msg').val());
+    socket.emit('room message', $('#msg').val());
+   // socket.to('54f275828c632b65478b4568').emit('chat message',{msg:'this is my message u asshole'});
     $('#msg').val('');
+   // alert("test submit");
     return false;
 });
 
