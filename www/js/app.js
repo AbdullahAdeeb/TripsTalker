@@ -32,6 +32,7 @@ var app = {
         console.log("Binding Events");
         $(document).on("deviceready", this.onDeviceReady);
         $(document).on("pagecreate","#login_page", this.onLoginPage);
+		$(document).on("pagecreate","#add_member", this.onAddMemberPage);
         $(document).on("pagecreate", "#event_page", this.oneventPage);
         $(document).on("pagecontainerbeforeshow", this.onBeforeShow);        
         $(document).on('apiReady',this.onApiReady);
@@ -55,6 +56,19 @@ var app = {
         console.log('login page created');
 
     },
+	
+	onAddMemberPage: function() {
+		console.log('Adding members to event')
+		friends.list = JSON.parse(window.localStorage.getItem('friends'));
+		
+		var list="";
+        for( var i =  0 ; i < friends.list.length ; i++){
+            //Add the friends as an li into friends list ul
+            list += ('<li><img src="img/ants.png"></img><h1>'+friends.list[i].name+'</h1></li>');
+
+        }
+        $('#members_list').html(list); 
+	},
 
     oneventPage: function(event,ui) {
         console.log('event-page init');
@@ -139,9 +153,12 @@ var account = {
                 nav.flipPage('events_page',false);
                 push.init();
                 session.load(); // will load from localStorage the session 
-                if(events.getListFromDB(response.id) && friends.getListFromDB(response.id)){
-                    $.mobile.loading("hide");
-                }
+                //if(events.getListFromDB(response.id) && friends.getListFromDB(response.id)){
+                  //  $.mobile.loading("hide");
+                //}
+				
+				events.getListFromDB(response.id);
+				friends.getListFromDB(response.id);
             }, function(response){
                 $.mobile.loading("hide");
                 //error handler
