@@ -15,7 +15,7 @@ var events = {
             console.log(JSON.stringify(response));
             room.id = response.record._id;
             window.localStorage.setItem('events',JSON.stringify(events.list));
-            events.load();
+            events.updateUI();
             nav.goTo('events_page',false);
         }, function(error){
             console.log(JSON.stringify(error));
