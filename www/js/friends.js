@@ -62,6 +62,7 @@ var friends = {
         // if the page is already open a manual refresh below will be preformed 
         if(app.activePage == "requests_page"){
             $("#requests_list").listview("refresh");
+			//
         }
 
     }

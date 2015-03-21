@@ -30,8 +30,7 @@ var events = {
         $.mobile.loading("show");
         console.log('events.getlistfromDB');
         var query = {$or: [{"admin": session.data.id},{"members": {$in:[session.data.id]}}]};  // the nosql query
-        
-        window.df.apis.mongo.getRecords({"table_name":"rooms","body":{ "filter": query},function(response){
+        window.df.apis.mongo.getRecords({"table_name":"rooms","body": query},function(response){
             // on success
             console.log('respones:'+JSON.stringify(response.record));
             window.localStorage.setItem('events',JSON.stringify(response.record));
