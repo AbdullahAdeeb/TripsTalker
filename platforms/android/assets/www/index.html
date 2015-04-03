@@ -278,7 +278,6 @@ testing
             <div data-role="header" data-theme="b" data-position="fixed">
                 <h3>events Talker</h3>
                 <div data-role="navbar" data-theme="b" data-position="fixed">
-
                     <ul>
                         <li><a href="#friends_page" data-icon="user"  data-theme="b"  data-transition="none" class = "ui-btn-active ui-state-persist">Friends</a></li>
                         <li><a href="#events_page" data-icon="comment"  data-theme="b"  data-transition="none">events</a></li>
@@ -311,7 +310,7 @@ testing
         </div>
 
 		
-		<!------------------------------------------------------------------------>
+	<!------------------------------------------------------------------------>
         <!---------------------------FIND FRIENDS PAGE---------------------------------->
         <!------------------------------------------------------------------------>
         <div data-role="page" id="findfriends">
@@ -367,7 +366,6 @@ testing
         <script src="libs/swagger.js" type='text/javascript'></script>
         <script src="libs/sdk-init.js" type='text/javascript'></script>
         <script src="libs/jquery-2.1.1.js"></script>
-        <script src="libs/jquery.mobile-1.4.4.js"></script>
         <script>
             $(document).on("mobileinit",function(){
                 console.log('mobile is init');
@@ -381,6 +379,7 @@ testing
                 $.mobile.loader.prototype.options.html = "";
             });
         </script>
+	<script src="libs/jquery.mobile-1.4.4.js"></script>
         <script src="js/push.js"></script>
         <script src="js/friends.js"></script>
         <script src="js/events.js"></script>
