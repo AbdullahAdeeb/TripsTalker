@@ -40,6 +40,7 @@ socket.on('room message',function(object){
         console.log("event not found");
       }else{
           events.list[eventIndex].msgs.append($('<li>').text(object.msg));
+          console.log("new event messages:"+events.list[eventIndex].msgs);
       }
 
 });

@@ -87,5 +87,7 @@ var events = {
         $("#event_page_header").html(events.list[index].name);
         $("#messages").html(events.list[index].msgs);
         nav.goTo("event_page",true);
+        console.log("event messages:"+events.list[eventIndex].msgs);
+
     }
 }
