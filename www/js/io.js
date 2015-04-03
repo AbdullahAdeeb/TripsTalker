@@ -33,8 +33,14 @@ socket.on('chat message',function(msg){
 });
 
 
-socket.on('room message',function(msg){
-    console.log('room msg='+msg);
-    $('#messages').append($('<li>').text(msg));
+socket.on('room message',function(object){
+    console.log('room msg='+object.msg);
+    var eventIndex = events.getEventIndex(object.room); 
+    if (eventIndex == -1) {
+        console.log("event not found");
+      }else{
+          events.list[eventIndex].msgs.append($('<li>').text(object.msg));
+      }
+
 });
 

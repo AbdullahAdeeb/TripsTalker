@@ -5,6 +5,15 @@
 var events = {
     list: [],
     openEvent: "",
+    getEventIndex: function(cmp){
+        for(var i =0;i<events.list.length;i++)
+        {
+            if(list[i]._id == cmp){
+              return i;
+            }
+        }
+        return -1;
+    },
     new: function(){
         var room = {"name": $(event_name).val(),"admin": session.data.id,"loc": $(event_location).val(),"members":[2,5,6],"connected":[],"disconnected":[]};
 
@@ -74,10 +83,9 @@ var events = {
     },
 
     open: function(index){
-        events.openEvent = events.list[i]._id;
-        var name = events.list[i].name;
-        $("#event_page_header").html(name);
+        events.openEvent = events.list[index]._id;
+        $("#event_page_header").html(events.list[index].name);
+        $("#messages").html(events.list[index].msgs);
         nav.goTo("event_page",true);
-
     }
 }

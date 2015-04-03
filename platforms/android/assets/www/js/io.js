@@ -19,8 +19,8 @@ socket.registerSNS = function(pushID, userID){
 //}
 
 $('#msg_form').submit(function(){
-    var room = "54f275828c632b65478b4568";
-    socket.emit('room message', {msg:$('#msg').val(), room:room});
+   // var room = "54f275828c632b65478b4568";
+    socket.emit('room message', {msg:$('#msg').val(), room:events.openEvent});
    // socket.to('54f275828c632b65478b4568').emit('chat message',{msg:'this is my message u asshole'});
     $('#msg').val('');
    // alert("test submit");
@@ -33,8 +33,14 @@ socket.on('chat message',function(msg){
 });
 
 
-socket.on('room message',function(msg){
-    console.log('room msg='+msg);
-    $('#messages').append($('<li>').text(msg));
+socket.on('room message',function(object){
+    console.log('room msg='+object.msg);
+    var eventIndex = events.getEventIndex(object.room); 
+    if (eventIndex == -1) {
+        console.log("event not found");
+      }else{
+          events.list[eventIndex].msgs.append($('<li>').text(object.msg));
+      }
+
 });
 

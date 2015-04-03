@@ -4,6 +4,16 @@
 //////////////////////////////////////////////////
 var events = {
     list: [],
+    openEvent: "",
+    getEventIndex: function(cmp){
+        for(var i =0;i<events.list.length;i++)
+        {
+            if(list[i]._id == cmp){
+              return i;
+            }
+        }
+        return -1;
+    },
     new: function(){
         var room = {"name": $(event_name).val(),"admin": session.data.id,"loc": $(event_location).val(),"members":[2,5,6],"connected":[],"disconnected":[]};
 
@@ -60,7 +70,7 @@ var events = {
         }
         var html = "";
         for(i=0;i<events.list.length;i++){
-            html += "<li><a href=javascript:events.open('"+events.list[i].name+"');><img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p></a></li>";
+            html += "<li><a href=javascript:events.open("+i+");><img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p></a></li>";
         }
         $('#events_list').html(html);
 
@@ -72,9 +82,10 @@ var events = {
 
     },
 
-    open: function(name){
-        $("#event_page_header").html(name);
+    open: function(index){
+        events.openEvent = events.list[index]._id;
+        $("#event_page_header").html(events.list[index].name);
+        $("#messages").html(events.list[index].msgs);
         nav.goTo("event_page",true);
-
     }
 }
