@@ -1,4 +1,4 @@
-var socket = io('http://52.0.36.197:3000');
+var socket = io('http://52.6.212.228:3000');
 
 
 socket.registerSNS = function(pushID, userID){
