@@ -4,29 +4,29 @@
 var push = {
     init: function(){
         console.log('push>> init');
+        if(pushNotification == undefined){
+            console.log("pushNotification is underfined: something is wrong with the plugin");
+            return;
+        }
         if (device.platform == 'android' || device.platform == 'Android'){
-            if(pushNotification == undefined){
-                console.log("pushNotification is underfined push.js:9 \n create proper handler for this.");
-                return;
-            }
             pushNotification.register(
                 push.successHandler,
                 push.errorHandler,
                 {"senderID":"557660622898",  // project ID from google api dashboard
                  "ecb":"onNotification"}
             );
-            //} else if ( device.platform == 'blackberry10'){
-            //    pushNotification.register(
-            //      push.successHandler,
-            //      push.errorHandler,
-            //      {invokeTargetId : "replace_with_invoke_target_id",
-            //      appId: "replace_with_app_id",
-            //      ppgUrl:"replace_with_ppg_url", //remove for BES pushes
-            //      ecb: "onNotificationBB",
-            //      simChangeCallback: replace_with_simChange_callback,
-            //      pushTransportReadyCallback: replace_with_pushTransportReady_callback,
-            //      launchApplicationOnPush: true
-            //      });
+//        } else if ( device.platform == 'blackberry10'){
+//            pushNotification.register(
+//              push.successHandler,
+//              push.errorHandler,
+//              {invokeTargetId : "replace_with_invoke_target_id",
+//              appId: "replace_with_app_id",
+//              ppgUrl:"replace_with_ppg_url", //remove for BES pushes
+//              ecb: "onNotificationBB",
+//              simChangeCallback: replace_with_simChange_callback,
+//              pushTransportReadyCallback: replace_with_pushTransportReady_callback,
+//              launchApplicationOnPush: true
+//              });
         } else if(device.platform == 'iOS'){
             pushNotification.register(
                 tokenHandler,
@@ -37,9 +37,8 @@ var push = {
                     "alert":"true",
                     "ecb":"onNotificationAPN"
                 });
-        }else {
-            // This is a browser
-            
+        }else if(device.platform == 'browser'){
+            console.log("browser has no push settings");
         }
     },
     successHandler: function(result){

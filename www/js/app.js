@@ -4,9 +4,9 @@
 var testing = {
     start:function(){
         console.log("TESTING MODE ON");
-        window.plugins = {};
-        window.plugins.pushNotification = {};
-        device = {platform : 'Android'};
+        window.plugins = {pushNotification:{}};
+//        window.plugins.pushNotification = {};
+        device = {platform : 'browser'};
         app.onDeviceReady();
     }
 }
@@ -48,6 +48,10 @@ var app = {
     onApiReady: function(){
         console.log('api is ready');
         app.apiReady = true;
+        if(typeof device === 'undefined'){
+            console.log("no device detected: we are on a browser");
+            testing.start();
+        }
         //TODO: check session earlier this is taking too long on cold load
         //            session.check();
     },
