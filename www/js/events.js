@@ -61,10 +61,17 @@ var events = {
         }
         var html = "";
         for(i=0;i<events.list.length;i++){
-            html += "<li><a href=javascript:events.open('"+events.list[i].name+"');><img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p></a></li>";
+            var tripname = events.list[i].name;
+//            html += "<li><a href=javascript:events.open("+tripname+");><img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p></a></li>";
+            var li = document.createElement("li");
+            var btn = document.createElement("a");
+            btn.innerHTML="<img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p>";
+            btn.setAttribute("href","javascript:events.open('"+tripname+"');");
+            li.appendChild(btn);
+            
         }
-        $('#events_list').html(html);
-
+//        $('#events_list').html(html);
+        $('#events_list').append(li);
         // refresh will happen when a page is opened, 
         // if the page is already open a manual refresh below will be preformed 
         if(app.activePage == "events_page"){
