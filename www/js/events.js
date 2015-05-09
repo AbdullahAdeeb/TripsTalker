@@ -68,10 +68,10 @@ var events = {
             btn.innerHTML="<img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p>";
             btn.setAttribute("href","javascript:events.open('"+tripname+"');");
             li.appendChild(btn);
-            
+            $('#events_list').append(li);
         }
 //        $('#events_list').html(html);
-        $('#events_list').append(li);
+        
         // refresh will happen when a page is opened, 
         // if the page is already open a manual refresh below will be preformed 
         if(app.activePage == "events_page"){
