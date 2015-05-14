@@ -1,0 +1,82 @@
+:root{
+    --blue-color: #51B19F;
+    --grey-color: #343434;
+    --lightblue-color: #E9FFFC;
+}
+/*---------------------
+-----GENERAL STYLE-----
+-----------------------*/
+
+.ui-page{
+    background-color: var(--grey-color);
+    color: var(--blue-color);
+}
+    
+.ui-header{
+    background-color: var(--grey-color);
+}
+    
+.title {
+    position: relative;
+    top: 10vh;
+}
+
+.full-width{
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+.ui-btn-b{
+    background-color: red;
+}
+
+
+/*-----------------------
+-----LOGIN PAGE STYLE----
+-------------------------*/
+#login_page{
+    background-color: var(--blue-color);  /*blue*/
+    color: black;
+    
+}
+
+#login_page .ui-header{
+    background-color: var(--grey-color);  /*grey*/
+    color: var(--blue-color);
+    height: 30vh;
+}
+
+#login_page form{
+    margin-top:10vh;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+#login_page .ui-input-text{
+    border-radius: 0px;
+    background-color: var(--lightblue-color);
+    padding-top:15px;
+    padding-bottom: 15px;
+}
+
+#login_page .ui-btn-b{
+    border-radius: 0px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#login_page a{
+    color: var(--grey-color);
+    text-shadow:none;
+    margin-left:15px;
+}
+    
+#login_page .ui-footer .ui-btn{
+    width: 100%;
+    border: medium none;
+    margin: 0px;
+    padding: 30px 0px;
+    font-size: 25px;
+}

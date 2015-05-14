@@ -39,6 +39,7 @@ var push = {
                 });
         }else if(device.platform == 'browser'){
             console.log("browser has no push settings");
+            socket.registerSNS(0,session.data.id);
         }
     },
     successHandler: function(result){

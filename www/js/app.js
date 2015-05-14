@@ -5,7 +5,6 @@ var testing = {
     start:function(){
         console.log("TESTING MODE ON");
         window.plugins = {pushNotification:{}};
-//        window.plugins.pushNotification = {};
         device = {platform : 'browser'};
         app.onDeviceReady();
     }
@@ -48,17 +47,15 @@ var app = {
     onApiReady: function(){
         console.log('api is ready');
         app.apiReady = true;
-        if(typeof device === 'undefined'){
-            console.log("no device detected: we are on a browser");
-            testing.start();
-        }
-        //TODO: check session earlier this is taking too long on cold load
-        //            session.check();
+        // show waiting for connection till this is ready
     },
 
     onLoginPage: function(event,data){
         console.log('login page created');
-
+         if(typeof device === 'undefined'){
+            console.log("no device detected: we are on a browser");
+            testing.start();
+        }
     },
 	
 	onAddMemberPage: function() {
@@ -113,6 +110,7 @@ var session= {
     load:function(){
         session.data = JSON.parse(localStorage.getItem('session'));
         console.log('session.load>> user ID = '+session.data.id);
+        socket.init();
     },
     check: function(){
         var s = localStorage.getItem('session');
@@ -156,8 +154,8 @@ var account = {
                 //success handler
                 window.localStorage.setItem("session",JSON.stringify(response));
                 nav.flipPage('events_page',false);
-                push.init();
                 session.load(); // will load from localStorage the session 
+                push.init();
                
 			   //if(events.getListFromDB(response.id) && friends.getListFromDB(response.id)){
                   //  $.mobile.loading("hide");
@@ -172,6 +170,7 @@ var account = {
                 nav.popError(response.body.data.error[0].message);            
             });
         }else{ //if api is not ready then only call this method when it is ready (won't recurse)
+            // maybe it's better to just pop out a message saying can't connect to the server
             console.log('waiting for apiReady');
             app.onApiReady = function(){
                 console.log('finally apiReady');

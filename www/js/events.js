@@ -4,6 +4,7 @@
 //////////////////////////////////////////////////
 var events = {
     list: [],
+    openedEventIndex:-1,
     new: function(){
         var room = {"name": $(event_name).val(),"admin": session.data.id,"loc": $(event_location).val(),"members":[2,5,6],"connected":[],"disconnected":[]};
 
@@ -61,12 +62,12 @@ var events = {
         }
         var html = "";
         for(i=0;i<events.list.length;i++){
-            var tripname = events.list[i].name;
+            var tripIndex = i;
 //            html += "<li><a href=javascript:events.open("+tripname+");><img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p></a></li>";
             var li = document.createElement("li");
             var btn = document.createElement("a");
             btn.innerHTML="<img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p>";
-            btn.setAttribute("href","javascript:events.open('"+tripname+"');");
+            btn.setAttribute("href","javascript:events.open('"+tripIndex+"');");
             li.appendChild(btn);
             $('#events_list').append(li);
         }
@@ -77,12 +78,12 @@ var events = {
         if(app.activePage == "events_page"){
             $("#events_list").listview("refresh");
         }
-
     },
 
-    open: function(name){
-        $("#event_page_header").html(name);
+    open: function(index){
+        events.openedEventIndex = index;
+        $("#event_page_header").html(events.list[index].name);
         nav.goTo("event_page",true);
-
+        socket.openRoom(events.list[index]._id);
     }
 }
