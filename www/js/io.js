@@ -15,6 +15,7 @@
 // connect and init when a session is started
 var socket = {
     init : function(){  
+//        socket.io = io('http://port-3000.kffba5yvnam50zfrlycytoe0e7ory66rppgfasvbmeoecdi.box.codeanywhere.com');
         socket.io = io('http://ip.baramejapps.com:3000');
         socket.io.emit('register userID', {userID:session.data.id});
         console.log('io: register userID');
@@ -27,11 +28,11 @@ var socket = {
         console.log('register >> pushID='+pushID);
     },
 
-    openRoom : function(roomID){
-        console.log("joing room = "+roomID)
-        socket.io.emit('join room',{roomID:roomID});
-        return true;
-    }
+//    openRoom : function(roomID){
+//        console.log("joing room = "+roomID)
+//        socket.io.emit('join room',{roomID:roomID});
+//        return true;
+//    }
 }
 
     //socket.createRoom = function(data){
@@ -46,7 +47,7 @@ var socket = {
     //}
 //----------END SOCKET FUNCTIONS--------
 
-
+var testdata;
 /*////////////////////////////////
 //        SOCKET LISTENERS
 *//////////////////////////////////
@@ -57,7 +58,7 @@ var bindListeners = function(){
         socket.io.emit('room message', {
             roomID:events.list[events.openedEventIndex]._id,
             msg:$('#msg').val(),
-            from:{id:session.data.id,name:session.data.display_name}
+            from:{'id':session.data.id,'name':session.data.display_name}
         });
         $('#msg').val('');
        // alert("test submit");
@@ -66,9 +67,11 @@ var bindListeners = function(){
 
     //---------RECEIVE LISTENER---------
     socket.io.on('room message',function(data){
-        console.log('room='+data.roomID+'  msg='+data.msg);
-        $('#messages').append($('<li>').text(data.from.name+': '+data.msg));
-
+        console.log('socket.io: room='+data.roomID+'  msg='+data.msg);
+//        $('#messages').append($('<li>').text(data.from.name+': '+data.msg));
+        testdata = data;
+        events.newMessage(data);
+        
     });
 }
 //----------END SOCKET LISTENERS--------

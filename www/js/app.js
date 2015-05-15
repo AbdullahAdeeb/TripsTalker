@@ -32,7 +32,7 @@ var app = {
         $(document).on("deviceready", this.onDeviceReady);
         $(document).on("pagecreate","#login_page", this.onLoginPage);
 		$(document).on("pagecreate","#add_member", this.onAddMemberPage);
-        $(document).on("pagecreate", "#event_page", this.oneventPage);
+        $(document).on("pagecreate", "#event_page", this.onEventPage);
         $(document).on("pagecontainerbeforeshow", this.onBeforeShow);        
         $(document).on('apiReady',this.onApiReady);
     },    
@@ -72,7 +72,7 @@ var app = {
         $('#members_list').html(list); */ 
 	},
 
-    oneventPage: function(event,ui) {
+    onEventPage: function(event,ui) {
         console.log('event-page init');
         $( document ).on( "swipeleft swiperight", "#event_page", function( e ) {
             // We check if there is no open panel on the page because otherwise
@@ -88,13 +88,20 @@ var app = {
         });
 
     },
+    //  ------------------------  
+    //    BEFORE SHOW HANDLER
+    //  ------------------------
     onBeforeShow: function(event,ui){
         app.activePage = $.mobile.pageContainer.pagecontainer("getActivePage")[0].id;
         console.log('active page: '+app.activePage);
+        
+        // ---------- EVENTS PAGE ----
         if(app.activePage == "events_page") {
             $("#events_list").listview('refresh');
             console.log("events list refreshed");
-
+            events.openedEventIndex = -1;
+            
+        // --------- FRIENDS PAGE ----
         }else if(app.activePage == "friends_page") {
             $("#friends_list").listview('refresh');
             console.log("friends list refreshed");

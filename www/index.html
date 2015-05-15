@@ -106,7 +106,7 @@ testing
 -->
 
         <!------------------------------------------------------------------->
-        <!------------------------- events page ------------------------------>
+        <!------------------------- Events List page ------------------------>
         <!------------------------------------------------------------------->
         <div data-role="page" id="events_page" data-add-back-btn="true">
             <div data-role="header" data-theme="b" data-position="fixed" >
@@ -142,7 +142,7 @@ testing
 
         </div>
         <!------------------------------------------------------------------------>
-        <!----------------------------A event-------------------------------------->
+        <!----------------------------An Event-------------------------------------->
         <!------------------------------------------------------------------------>
         <div data-role="page" id="event_page" data-add-back-btn="true">
 
@@ -153,7 +153,8 @@ testing
 
             <!-- Header -->
             <div data-role="header" data-theme="b" data-position="fixed">
-                <h1  id='event_page_header'>New event</h1>
+                <a href="#events_page" data-icon="arrow-l" class="ui-btn-left">Back</a>
+                <h1 id='event_page_header'>New event</h1>
                 <a href="#event_panel" data-icon="bars" class="ui-btn-right">Open panel</a>
 
             </div>
@@ -187,7 +188,13 @@ testing
                 <!-- <a href="#friends_panel" data-icon="bars" class="ui-btn-right">Requests</a> -->
 
                 <ul data-role="listview" id= "memebers_list" type = "a" data-autodividers="true" >
-
+                    <li id="event-li-template" class="ui-li-has-thumb" style="display:none;">
+                        <a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="">
+                            <img src="img/ants.png">
+                            <h1></h1>
+                            <p></p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

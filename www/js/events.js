@@ -3,8 +3,9 @@
 //               eventS
 //////////////////////////////////////////////////
 var events = {
-    list: [],
-    openedEventIndex:-1,
+    list: [],   //contains all the events
+    messages:[],  // indexed my roomID
+    openedEventIndex: -1,
     new: function(){
         var room = {"name": $(event_name).val(),"admin": session.data.id,"loc": $(event_location).val(),"members":[2,5,6],"connected":[],"disconnected":[]};
 
@@ -63,15 +64,16 @@ var events = {
         var html = "";
         for(i=0;i<events.list.length;i++){
             var tripIndex = i;
-//            html += "<li><a href=javascript:events.open("+tripname+");><img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p></a></li>";
+            events.messages[events.list[i]._id] =[];
+            // Create the list item for the event
             var li = document.createElement("li");
-            var btn = document.createElement("a");
-            btn.innerHTML="<img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p>";
-            btn.setAttribute("href","javascript:events.open('"+tripIndex+"');");
-            li.appendChild(btn);
+            li.id = "li-"+events.list[i]._id;
+            var a = document.createElement("a");
+            a.innerHTML="<img src='img/ants.png'></img><h1>"+events.list[i].name+"</h1><p>"+events.list[i].loc+"</p>";
+            a.setAttribute("href","javascript:events.open('"+tripIndex+"');");
+            li.appendChild(a);
             $('#events_list').append(li);
         }
-//        $('#events_list').html(html);
         
         // refresh will happen when a page is opened, 
         // if the page is already open a manual refresh below will be preformed 
@@ -82,8 +84,36 @@ var events = {
 
     open: function(index){
         events.openedEventIndex = index;
+        var eventID = events.list[index]._id;
         $("#event_page_header").html(events.list[index].name);
+        $("#messages").html("");
+        events.messages[eventID].forEach(function(msg, index, msgs){
+            $('#messages').append($('<li>').text(msg.from.name+': '+msg.msg));
+        });
         nav.goTo("event_page",true);
-        socket.openRoom(events.list[index]._id);
+//        socket.openRoom(events.list[index]._id);
+    },
+    
+    newMessage: function(data){
+        if(events.messages[data.roomID] === undefined){
+            events.messages[data.roomID] = [];
+        }
+        events.messages[data.roomID].push({"from":data.from,"msg":data.msg});
+        
+        if(events.openedEventIndex == -1){
+        // ------ current view is event's list -----------
+            // update the message list
+            console.log("Notification: we got a message");
+        }else{ 
+        // ----- current view is the target event ---------
+            if(events.list[events.openedEventIndex]._id == data.roomID){
+//            $("#li-"+data.roomID).
+                $('#messages').append($('<li>').text(data.from.name+': '+data.msg));  
+                
+        // ----- current view is another event -----------
+            }else{
+                console.log("we got a message in another event");
+            }
+        }
     }
 }
