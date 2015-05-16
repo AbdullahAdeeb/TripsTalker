@@ -5,7 +5,6 @@ var testing = {
     start:function(){
         console.log("TESTING MODE ON");
         window.plugins = {pushNotification:{}};
-//        window.plugins.pushNotification = {};
         device = {platform : 'browser'};
         app.onDeviceReady();
     }
@@ -33,7 +32,7 @@ var app = {
         $(document).on("deviceready", this.onDeviceReady);
         $(document).on("pagecreate","#login_page", this.onLoginPage);
 		$(document).on("pagecreate","#add_member", this.onAddMemberPage);
-        $(document).on("pagecreate", "#event_page", this.oneventPage);
+        $(document).on("pagecreate", "#event_page", this.onEventPage);
         $(document).on("pagecontainerbeforeshow", this.onBeforeShow);        
         $(document).on('apiReady',this.onApiReady);
     },    
@@ -48,17 +47,15 @@ var app = {
     onApiReady: function(){
         console.log('api is ready');
         app.apiReady = true;
-        if(typeof device === 'undefined'){
-            console.log("no device detected: we are on a browser");
-            testing.start();
-        }
-        //TODO: check session earlier this is taking too long on cold load
-        //            session.check();
+        // show waiting for connection till this is ready
     },
 
     onLoginPage: function(event,data){
         console.log('login page created');
-
+         if(typeof device === 'undefined'){
+            console.log("no device detected: we are on a browser");
+            testing.start();
+        }
     },
 	
 	onAddMemberPage: function() {
@@ -75,7 +72,7 @@ var app = {
         $('#members_list').html(list); */ 
 	},
 
-    oneventPage: function(event,ui) {
+    onEventPage: function(event,ui) {
         console.log('event-page init');
         $( document ).on( "swipeleft swiperight", "#event_page", function( e ) {
             // We check if there is no open panel on the page because otherwise
@@ -91,13 +88,20 @@ var app = {
         });
 
     },
+    //  ------------------------  
+    //    BEFORE SHOW HANDLER
+    //  ------------------------
     onBeforeShow: function(event,ui){
         app.activePage = $.mobile.pageContainer.pagecontainer("getActivePage")[0].id;
         console.log('active page: '+app.activePage);
+        
+        // ---------- EVENTS PAGE ----
         if(app.activePage == "events_page") {
             $("#events_list").listview('refresh');
             console.log("events list refreshed");
-
+            events.openedEventIndex = -1;
+            
+        // --------- FRIENDS PAGE ----
         }else if(app.activePage == "friends_page") {
             $("#friends_list").listview('refresh');
             console.log("friends list refreshed");
@@ -113,6 +117,7 @@ var session= {
     load:function(){
         session.data = JSON.parse(localStorage.getItem('session'));
         console.log('session.load>> user ID = '+session.data.id);
+        socket.init();
     },
     check: function(){
         var s = localStorage.getItem('session');
@@ -156,8 +161,8 @@ var account = {
                 //success handler
                 window.localStorage.setItem("session",JSON.stringify(response));
                 nav.flipPage('events_page',false);
-                push.init();
                 session.load(); // will load from localStorage the session 
+                push.init();
                
 			   //if(events.getListFromDB(response.id) && friends.getListFromDB(response.id)){
                   //  $.mobile.loading("hide");
@@ -172,6 +177,7 @@ var account = {
                 nav.popError(response.body.data.error[0].message);            
             });
         }else{ //if api is not ready then only call this method when it is ready (won't recurse)
+            // maybe it's better to just pop out a message saying can't connect to the server
             console.log('waiting for apiReady');
             app.onApiReady = function(){
                 console.log('finally apiReady');
