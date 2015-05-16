@@ -160,14 +160,14 @@ testing
                     <input type="text" name="msg" id="msg">
                     <button>Send</button>
                 </form>
-					<button class="ui-btn ui-shadow-icon ui-btn-b" onclick="nav.goTo('add_member',false);" >Add me some friends</button>
+					<button class="ui-btn ui-shadow-icon ui-btn-b" onclick="nav.goTo('addmember_page',false);" >Add me some friends</button>
             </div>
         </div>
 
 		<!------------------------------------------------------------------------>
         <!---------------------------ADD MEMEBERS TO AN EVENT---------------------------------->
         <!------------------------------------------------------------------------>
-        <div data-role="page" id="add_member">
+        <div data-role="page" id="addmember_page">
                 <div data-role="header" class="ui-header ui-bar-b">
               
 					<input placeholder="Search Friends..." data-type="search" class="ui-input-text ui-body-a" autofocus="autofocus">
@@ -177,10 +177,12 @@ testing
              <!--Content-->
             <div data-role="content" style="padding: 15px">
 
-                <!-- <a href="#friends_panel" data-icon="bars" class="ui-btn-right">Requests</a> -->
-
-                <ul data-role="listview" id= "memebers_list" type = "a" data-autodividers="true" >
-
+               
+				<!-------------------------Look here ADEEEEBOOOOOO------------------------>
+                <ul data-role="listview" id= "members_list" type = "a" data-autodividers="true" >
+				
+				
+					
                 </ul>
             </div>
         </div>

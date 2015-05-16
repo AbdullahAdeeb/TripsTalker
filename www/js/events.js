@@ -69,9 +69,32 @@ var events = {
         // if the page is already open a manual refresh below will be preformed 
         if(app.activePage == "events_page"){
             $("#events_list").listview("refresh");
+		
         }
 
     },
+	
+	///////////////////////////////////////ADDING THEM ////// 
+	// Adds members to an event // WORKING ON IT
+	addmembers: function(){
+	
+		for( var i =  0 ; i < friends.list.length ; i++){
+            //Add the friends as an li into friends list ul
+           members.list[i] = friends.list[i];
+
+        }
+		for(i=0;i<members.list.length;i++){
+            html += "<li><a href=javascript:events.open('"+members.list[i].name+"');><img src='img/ants.png'></img><h1>"+members.list[i].name+"</h1><p>"+memebers.list[i].loc+"</p></a></li>";
+        }
+        $('#memebrs_list').html(html);
+		
+		//if(app.activePage == "addmember_page"){
+          $("members_list").listview("refresh");
+		 
+		//if (app.activePage == "addmember_page"){
+		//$("#members_list")=("#friends_list");
+		//}
+	},
 
     open: function(name){
         $("#event_page_header").html(name);
