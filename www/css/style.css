@@ -8,12 +8,12 @@
 -----------------------*/
 
 .ui-page{
-    background-color: var(--grey-color);
-    color: var(--blue-color);
+    background-color: #343434;
+    color: #51B19F;
 }
     
 .ui-header{
-    background-color: var(--grey-color);
+    background-color: #343434;
 }
     
 .title {
@@ -37,14 +37,14 @@
 -----LOGIN PAGE STYLE----
 -------------------------*/
 #login_page{
-    background-color: var(--blue-color);  /*blue*/
+    background-color: #51B19F;  /*blue*/
     color: black;
     
 }
 
 #login_page .ui-header{
-    background-color: var(--grey-color);  /*grey*/
-    color: var(--blue-color);
+    background-color: #343434;  /*grey*/
+    color: #51B19F;
     height: 30vh;
 }
 
@@ -56,7 +56,7 @@
 
 #login_page .ui-input-text{
     border-radius: 0px;
-    background-color: var(--lightblue-color);
+    background-color: #E9FFFC;
     padding-top:15px;
     padding-bottom: 15px;
 }
@@ -68,7 +68,7 @@
 }
 
 #login_page a{
-    color: var(--grey-color);
+    color: #343434;
     text-shadow:none;
     margin-left:15px;
 }
