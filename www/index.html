@@ -176,10 +176,10 @@ testing
         <!---------------------------ADD MEMEBERS TO AN EVENT---------------------------------->
         <!------------------------------------------------------------------------>
         <div data-role="page" id="addmember_page">
-                <div data-role="header" class="ui-header ui-bar-b">
-              
-					<input placeholder="Search Friends..." data-type="search" class="ui-input-text ui-body-a" autofocus="autofocus">
-					
+            <div data-role="header" class="ui-header ui-bar-b">
+                <form class="ui-filterable">
+				    <input id="addMembersSearch" placeholder="Search Friends..." data-type="search" class="ui-input-text ui-body-a" autofocus="autofocus">
+                </form>
 					
             </div>
              <!--Content-->
@@ -187,7 +187,7 @@ testing
 
            
 				<!-------------------------Look here ADEEEEBOOOOOO------------------------>
-                <ul data-role="listview" id= "members_list" type = "a" data-autodividers="true" >
+                <ul data-role="listview" data-filter="true" id="members_list" type = "a" data-autodividers="true" data-input="#addMembersSearch">
 				
 				
 					
@@ -204,6 +204,10 @@ testing
                     </li>
 -->
                 </ul>
+            </div>
+            <div data-role="footer" data-position="fixed">
+                <button type="button" data-role="button" data-theme="b" onClick="alert('coming soon');">Add Members</button>
+                <button type="button" data-role="button" data-theme="b" onClick="nav.goTo('event_page',false);">Back</button>
             </div>
         </div>
 		

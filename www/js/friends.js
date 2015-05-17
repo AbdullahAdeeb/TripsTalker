@@ -44,6 +44,9 @@ var friends = {
 
         }
         $('#friends_list').html(list); 
+        
+        $('#members_list').html(list); 
+
 
         if(app.activePage == "friends_page"){
             $("#friends_list").listview("refresh");
@@ -57,7 +60,7 @@ var friends = {
             req += ('<li><img src="img/ants.png"></img><h1>'+friends.requests[i].name+'</h1></li>');
         }
         $('#requests_list').html(req); 
-
+        
         // refresh will happen when a page is opened, 
         // if the page is already open a manual refresh below will be preformed 
         if(app.activePage == "requests_page"){
