@@ -40,7 +40,7 @@ var app = {
     onDeviceReady: function() {
         console.log('device is ready:'+device.platform);
         pushNotification = window.plugins.pushNotification;
-        document.addEventListener("backbutton", nav.backButtonHandler, false);
+        document.addEventListener("backbutton", nav.onBackButton, false);
         session.check();
     },
 
@@ -48,14 +48,14 @@ var app = {
         console.log('api is ready');
         app.apiReady = true;
         // show waiting for connection till this is ready
+        if(typeof device === 'undefined'){
+            console.log("no device detected: we are on a browser");
+            testing.start();
+        }
     },
 
     onLoginPage: function(event,data){
         console.log('login page created');
-         if(typeof device === 'undefined'){
-            console.log("no device detected: we are on a browser");
-            testing.start();
-        }
     },
 	
 	onAddMemberPage: function() {
@@ -218,6 +218,7 @@ var account = {
     },
     logout: function(){
         session.clear();
+        history.go(-(history.length - 1));
         $.mobile.pageContainer.pagecontainer('change', '#login_page', {
             transition: 'flip',
             changeHash: false,

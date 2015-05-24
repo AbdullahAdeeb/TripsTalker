@@ -50,16 +50,21 @@ var nav = {
         nav.flipPage(page,track);
     },
 
-    backButtonHandler: function(){
+    onBackButton: function(){
         if(app.activePage == "event_page"){
             nav.flow("events_page",true);
-
+            
         }else if(app.activePage == "events_page" ){
             navigator.app.exitApp();
 
         }else if(app.activePage == "newevent_page"){
             nav.slideUp("events_page",false);
-
+        }else if(app.activePage == "login_page"){
+            // do nothing
+            navigator.app.exitApp();
+            // TODO: exit on double tab
+        }else if(app.activePage == "reset_page" || app.activePage == "register_page"){
+            nav.slideUp("login_page",false);
         }else{
             nav.goTo("events_page",false);
         }

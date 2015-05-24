@@ -37,19 +37,25 @@
 -----LOGIN PAGE STYLE----
 -------------------------*/
 #login_page{
-    background-color: #51B19F;  /*blue*/
+    background-color: #2980b9;  /*blue*/
     color: black;
     
 }
+    
+#login_page h1{
+    color: #343434;  /*grey*/
+    text-shadow: none;
+}
 
 #login_page .ui-header{
-    background-color: #343434;  /*grey*/
+    background-color: #2980b9;  /*blue*/
     color: #51B19F;
-    height: 30vh;
+/*    height: 30vh;*/
+    border: none;
 }
 
 #login_page form{
-    margin-top:10vh;
+    padding-top:10vh;
     padding-left: 5%;
     padding-right: 5%;
 }
