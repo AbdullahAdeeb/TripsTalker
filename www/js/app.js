@@ -203,6 +203,7 @@ var account = {
                 {"login":true,"body":newUser},
                 function (response){
                     alert("Registeration worked");
+                    nav.flipPage("login_page",false);
                 }, function (response){
                     nav.popError(response.body.data.error[0].message);
                 }             // error handler
