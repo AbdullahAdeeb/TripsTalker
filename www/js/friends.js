@@ -9,13 +9,15 @@ var friends = {
     // getListFromDB function gets the data from the database and store it in the device localStorage
     // return true on success; and calls friends.updateUI()
     // return false on error
-    getListFromDB: function(id){
+    getListFromDB: function(){
         console.log('friends.getListFromDB');
-        var query = {'member': session.data.id};  // the nosql query
-        window.df.apis.mongo.getRecords({"table_name":"friends","body": query},function(response){
+        var query = "member ="+ session.data.id;  // the nosql query
+        console.log(session.data.id);
+        $.mobile.loading("show");
+        window.df.apis.mongo.getRecordsByFilter({"table_name":"friends","filter": query},function(response){
             // on success
-            $.mobile.loading("show");
             console.log('got friends from mongo');
+            console.log(response);
             window.localStorage.setItem('friends',JSON.stringify(response.record[0].friends));
             window.localStorage.setItem('requests',JSON.stringify(response.record[0].requests));
             friends.updateUI();
@@ -44,6 +46,9 @@ var friends = {
 
         }
         $('#friends_list').html(list); 
+        
+        $('#members_list').html(list); 
+
 
         if(app.activePage == "friends_page"){
             $("#friends_list").listview("refresh");
@@ -57,7 +62,7 @@ var friends = {
             req += ('<li><img src="img/ants.png"></img><h1>'+friends.requests[i].name+'</h1></li>');
         }
         $('#requests_list').html(req); 
-
+        
         // refresh will happen when a page is opened, 
         // if the page is already open a manual refresh below will be preformed 
         if(app.activePage == "requests_page"){
