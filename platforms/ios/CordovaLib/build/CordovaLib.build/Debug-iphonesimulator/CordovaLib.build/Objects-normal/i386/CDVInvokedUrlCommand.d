@@ -1,0 +1,6 @@
+dependencies: \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/CordovaLib/Classes/CDVInvokedUrlCommand.m \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/CordovaLib/Classes/CDVInvokedUrlCommand.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/CordovaLib/Classes/CDVJSON_private.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/CordovaLib/Classes/NSData+Base64.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/CordovaLib/Classes/CDVAvailabilityDeprecated.h

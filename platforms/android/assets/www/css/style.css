@@ -1,0 +1,88 @@
+:root{
+    --blue-color: #51B19F;
+    --grey-color: #343434;
+    --lightblue-color: #E9FFFC;
+}
+/*---------------------
+-----GENERAL STYLE-----
+-----------------------*/
+
+.ui-page{
+    background-color: #343434;
+    color: #51B19F;
+}
+    
+.ui-header{
+    background-color: #343434;
+}
+    
+.title {
+    position: relative;
+    top: 10vh;
+}
+
+.full-width{
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+.ui-btn-b{
+    background-color: red;
+}
+
+
+/*-----------------------
+-----LOGIN PAGE STYLE----
+-------------------------*/
+#login_page{
+    background-color: #2980b9;  /*blue*/
+    color: black;
+    
+}
+    
+#login_page h1{
+    color: #343434;  /*grey*/
+    text-shadow: none;
+}
+
+#login_page .ui-header{
+    background-color: #2980b9;  /*blue*/
+    color: #51B19F;
+/*    height: 30vh;*/
+    border: none;
+}
+
+#login_page form{
+    padding-top:10vh;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+#login_page .ui-input-text{
+    border-radius: 0px;
+    background-color: #E9FFFC;
+    padding-top:15px;
+    padding-bottom: 15px;
+}
+
+#login_page .ui-btn-b{
+    border-radius: 0px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#login_page a{
+    color: #343434;
+    text-shadow:none;
+    margin-left:15px;
+}
+    
+#login_page .ui-footer .ui-btn{
+    width: 100%;
+    border: medium none;
+    margin: 0px;
+    padding: 30px 0px;
+    font-size: 25px;
+}
