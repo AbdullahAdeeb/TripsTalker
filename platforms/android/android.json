@@ -1,0 +1,160 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"PushPlugin\"><param name=\"android-package\" value=\"com.plugin.gcm.PushPlugin\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Vibration\"><param name=\"android-package\" value=\"org.apache.cordova.vibration.Vibration\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "AndroidManifest.xml": {
+                "parents": {
+                    "/manifest": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.VIBRATE\" />",
+                            "count": 2
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.google.android.c2dm.permission.RECEIVE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<permission android:name=\"com.baramejapps.tripstalker.permission.C2D_MESSAGE\" android:protectionLevel=\"signature\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.baramejapps.tripstalker.permission.C2D_MESSAGE\" />",
+                            "count": 1
+                        }
+                    ],
+                    "/manifest/application": [
+                        {
+                            "xml": "<activity android:exported=\"true\" android:name=\"com.plugin.gcm.PushHandlerActivity\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<receiver android:name=\"com.plugin.gcm.CordovaGCMBroadcastReceiver\" android:permission=\"com.google.android.c2dm.permission.SEND\"><intent-filter><action android:name=\"com.google.android.c2dm.intent.RECEIVE\" /><action android:name=\"com.google.android.c2dm.intent.REGISTRATION\" /><category android:name=\"com.baramejapps.tripstalker\" /></intent-filter></receiver>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<service android:name=\"com.plugin.gcm.GCMIntentService\" />",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "com.phonegap.plugins.PushPlugin": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        },
+        "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        },
+        "org.apache.cordova.splashscreen": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        },
+        "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        }
+    },
+    "dependent_plugins": {},
+    "modules": [
+        {
+            "file": "plugins/com.phonegap.plugins.PushPlugin/www/PushNotification.js",
+            "id": "com.phonegap.plugins.PushPlugin.PushNotification",
+            "pluginId": "com.phonegap.plugins.PushPlugin",
+            "clobbers": [
+                "PushNotification"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.device/www/device.js",
+            "id": "org.apache.cordova.device.device",
+            "pluginId": "org.apache.cordova.device",
+            "clobbers": [
+                "device"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.dialogs/www/notification.js",
+            "id": "org.apache.cordova.dialogs.notification",
+            "pluginId": "org.apache.cordova.dialogs",
+            "merges": [
+                "navigator.notification"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.dialogs/www/android/notification.js",
+            "id": "org.apache.cordova.dialogs.notification_android",
+            "pluginId": "org.apache.cordova.dialogs",
+            "merges": [
+                "navigator.notification"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.splashscreen/www/splashscreen.js",
+            "id": "org.apache.cordova.splashscreen.SplashScreen",
+            "pluginId": "org.apache.cordova.splashscreen",
+            "clobbers": [
+                "navigator.splashscreen"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.vibration/www/vibration.js",
+            "id": "org.apache.cordova.vibration.notification",
+            "pluginId": "org.apache.cordova.vibration",
+            "merges": [
+                "navigator.notification",
+                "navigator"
+            ]
+        }
+    ],
+    "plugin_metadata": {
+        "com.phonegap.plugins.PushPlugin": "2.4.0",
+        "org.apache.cordova.device": "0.3.0",
+        "org.apache.cordova.dialogs": "0.2.11-dev",
+        "org.apache.cordova.splashscreen": "0.3.5-dev",
+        "org.apache.cordova.vibration": "0.3.12-dev"
+    }
+}
