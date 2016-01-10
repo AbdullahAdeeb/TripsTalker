@@ -1,0 +1,24 @@
+dependencies: \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/TripsTalker/Plugins/com.phonegap.plugins.PushPlugin/PushPlugin.m \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/TripsTalker/Plugins/com.phonegap.plugins.PushPlugin/PushPlugin.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDV.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVAvailability.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVAvailabilityDeprecated.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVPlugin.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVPluginResult.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/NSMutableArray+QueueAdditions.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVCommandDelegate.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVInvokedUrlCommand.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVViewController.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVCommandQueue.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVWhitelist.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVScreenOrientationDelegate.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVURLProtocol.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVDebug.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVLocalStorage.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVTimer.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/NSArray+Comparisons.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/NSData+Base64.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/NSDictionary+Extensions.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/UIDevice+Extensions.h \
+  /Users/maneklakhanpal/TripsTalker/platforms/ios/build/emulator/include/Cordova/CDVJSON.h
