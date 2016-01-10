@@ -1,0 +1,27 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "com.phonegap.plugins.PushPlugin": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        },
+        "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        },
+        "org.apache.cordova.splashscreen": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        },
+        "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "com.baramejapps.tripstalker"
+        }
+    },
+    "dependent_plugins": {}
+}
